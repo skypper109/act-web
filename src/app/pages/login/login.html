@@ -1,0 +1,55 @@
+<div class="principal">
+
+    <div class="logo">
+      <img src="icones/logoACT.svg" alt="logo">
+    </div>
+
+  <div class="contenair">
+
+    <div class="description">
+      <h1>Act</h1>
+      <h2>Administration</h2>
+      <h3>Plateforme de gestion centralisée pour </h3>
+      <h3>KeneyaCare et SikidaSolidarité</h3>
+      <ul>
+        <li>Gestion des associations et organisations</li>
+        <li>Coordination des dons de matériel médical</li>
+        <li>Organisation des activités bénévoles</li>
+        <li>Gestion des utilisateurs et des rôles</li>
+      </ul>
+      <p>2025  Act - Tous droits réservés</p>
+    </div>
+
+    <div class="form">
+      <h1 style="text-align: center;">Connexion</h1>
+        @if (error) {
+          <p class="error">Adresse email ou mot de passe incorrect</p>
+        }
+      <form [formGroup]="loginData" (ngSubmit)="onSubmit()">
+        <div class="email">
+          <label for="email">Adresse Email</label><br>
+          <input type="email" id="email" formControlName="email" placeholder="admin@act.ml" (click)="changer()">
+        </div>
+
+        <div class="password">
+          <label for="password">Mot de passe</label><br>
+          <input type="password" id="password" placeholder=". . . . . . ." formControlName="password" (click)="changer()">
+        </div>
+
+        <div class="condition">
+          <div class="condVal">
+            <input type="checkbox" name="condition" id="condition"> Condition
+          </div>
+          <div class="passwordForget">
+            <a href="#">Mot de passe oublier ?</a>
+          </div>
+        </div>
+
+        <div class="button">
+          <input type="submit" value="Se connecter">
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

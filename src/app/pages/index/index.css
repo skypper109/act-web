@@ -1,0 +1,265 @@
+.content{
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-areas:'sidebar header '
+                        'sidebar main '
+                       'sidebar main ';
+  background-color: #f0f2f5;
+}
+
+/* Partie Header */
+
+.header{
+  height: 10vh;
+  width: 82vw;
+  background-color: rgb(255, 255, 255);
+  grid-area: header;
+  border-bottom: 1px solid #6b728051;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 20px;
+}
+.header .right{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-evenly;
+  padding: 10px;
+
+}
+.header .right p{
+  font-size: large;
+  color: #6B7280;
+  margin-right: 10px;
+}
+.header .right svg{
+  filter: invert(0);
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  color: rgb(107, 114, 128);
+  cursor: pointer;
+}
+.header .right img{
+  filter: invert(0);
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+  vertical-align: middle;
+  color: rgb(107, 114, 128);
+  cursor: pointer;
+}
+
+.sideBar .titrePage{
+  height: 10vh;
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+  padding-left: 20px;
+  /* float: left; */
+  font-size: xx-large;
+}
+.sideBar .titrePage h2{
+  font-weight: 500;
+  color: rgb(55, 65, 81);
+}
+.sideBar img{
+  filter: invert(0);
+  margin-right: 15px;
+  width: 45px;
+  height: 45px;
+  vertical-align: middle;
+  color: rgb(107, 114, 128);
+}
+/* Fin de la partie Header */
+
+
+/* Partie side bar */
+
+.sideBar{
+  height: 100vh;
+  width: 18vw;
+  /* background-color: rgb(120, 29, 29); */
+  background-color: rgb(255, 255, 255);
+  grid-area: sidebar;
+  display: grid;
+  grid-template-areas:
+                      'head'
+                      'list'
+                      'profil'
+  ;
+}
+
+.sideBar .titreLogo{
+  grid-area: head;
+  height: 10vh;
+  border-bottom: 1px solid #6b728051;
+}
+
+.sideBar .nav{
+  grid-area: list;
+  height: 70vh;
+  border-bottom: 1px solid #6b728051;
+  border-right: 1px solid #6b728051;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav ul{
+  /* padding: 20px; */
+  /* margin: 10px; */
+  list-style-type: none;
+  width: 100%;
+  margin-top: 40px;
+}
+.nav ul li{
+  font-size: large;
+  /* padding: 10px; */
+  /* text-justify: auto; */
+  /* margin: 10px; */
+  width: 90%;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 15px;
+}
+.nav ul li:hover{
+  background-color: #2E7D32;
+  cursor: pointer;
+  border-radius: 10px;
+  color: white;
+}
+a{
+  text-decoration: none;
+  color: rgb(55, 65, 81);
+  margin-left: 5px;
+}
+a:hover{
+  text-decoration: none;
+  color: white;
+}
+.nav ul li svg{
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+.selected{
+  width: 100%;
+  background-color: #2E7D32;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 15px;
+  color: white;
+}
+.selected a{
+  color: white;
+}
+.selected:hover{
+  background-color: #2E7D32;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+}
+.selected svg{
+  filter: invert(1);
+  fill:rgba(255, 255, 255, 0.066);
+  stroke:white;
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+.selected svg path {
+  filter: invert(1);
+  fill:rgba(255, 255, 255, 0.016);
+  stroke:white;
+}
+
+/* Partie Profil Footer */
+.sideBar .profil{
+  grid-area: profil;
+  height: 20vh;
+  border-right: 1px solid #6b728051;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* padding-left: 20px; */
+  width: 100%;
+}
+
+.sideBar .profil h3{
+  margin-top: 10px;
+  font-size: large;
+  color: rgb(55, 65, 81);
+}
+.sideBar .profil .profilBottom{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  width: 90%;
+}
+
+.sideBar .profil .logout{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  width: 90%;
+  cursor: pointer;
+  background-color: gainsboro;
+  padding: 5px;
+  border-radius: 10px;
+  margin-top: 25px;
+}
+.sideBar .profil .logout a{
+  text-decoration: none;
+  color:rgb(183, 5, 5);
+  margin-top: 10px;
+  font-size: large;
+}
+.logout:hover{
+  opacity: 0.8;
+}
+
+
+.sideBar .profil .profilBottom img{
+  filter: invert(0);
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+  margin-top: 5px;
+  vertical-align: middle;
+  color: rgb(107, 114, 128);
+  cursor: pointer;
+}
+
+.sideBar .profil .logout img{
+  filter: invert(0);
+  width: 30px;
+  height:30px;
+  margin-right: 20px;
+  margin-top: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* Fin partie Profil footer */
+
+/* Fin partie Side Bar */
+.main{
+  height: 88vh;
+  width: 82vw;
+  overflow: auto;
+  background-color: rgb(255, 255, 255);
+  grid-area: main;
+  padding: 10px;
+}

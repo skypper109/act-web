@@ -1,0 +1,276 @@
+<div class="page-container">
+  <header>
+    <div class="header-content">
+      <a routerLink="../" style="display: flex; padding: 10px; gap: 10px">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        Retour a la liste
+      </a>
+      <p>Gérez les dons effectués sur la plateforme</p>
+    </div>
+    <button class="notifier-btn" (click)="notifier()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+      Notifier
+    </button>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="main-info-section">
+      <div class="image-carousel">
+        <div class="image-wrapper">
+          <img [src]="don.images[currentImageIndex]" [alt]="don.titre" class="main-image" />
+          <span class="statut-badge" [ngClass]="don.statut">{{ don.statut }}</span>
+        </div>
+
+        <button class="arrow prev" (click)="prevImage()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button class="arrow next" (click)="nextImage()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+
+        <div class="dots-indicator">
+          @for (image of don.images; track $index) {
+          <span
+            class="dot"
+            [class.active]="currentImageIndex === $index"
+            (click)="goToImage($index)"
+          >
+          </span>
+          }
+        </div>
+      </div>
+
+      <div class="details-card">
+        <h2>{{ don.titre }}</h2>
+
+        <div class="detail-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 21.7c-3.7 0-6.7-3-6.7-6.7S12 3 12 3s6.7 5.7 6.7 12c0 3.7-3 6.7-6.7 6.7z" />
+            <circle cx="12" cy="11" r="3" />
+          </svg>
+          <span class="label">Localisation</span>
+          <span class="value">{{ don.localisation }}</span>
+        </div>
+
+        <div class="detail-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          <span class="label">Type</span>
+          <span class="value">{{ don.type }}</span>
+        </div>
+
+        <div class="detail-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M20 10V7a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v3m0 0v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10M4 10h16M7 10v12"
+            />
+          </svg>
+          <span class="label">Quantité</span>
+          <span class="value">{{ don.quantite }}</span>
+        </div>
+
+        <div class="actions">
+          <div class="actions">
+            @if (don.statut === 'Publie') {
+            <ng-container>
+              <button class="btn-primary" (click)="attribuerEtLivrer(don.id)">Attribuer et Livrer</button>
+              <button class="btn-edit" (click)="modifierAttribution(don.id)">
+                Modifier l'attribution
+              </button>
+              <button class="btn-secondary" (click)="declinerDon(don.id)">Revoquer la publication</button>
+            </ng-container>
+            } @else if(don.statut !== 'Livre' && don.statut !== 'Decline' ) {
+            <ng-container>
+              <button class="btn-primary" (click)="publier(don.id)">Publier</button>
+              <button class="btn-secondary" (click)="declinerDon(don.id)">Décliner</button>
+            </ng-container>
+            }@else {
+              <button class="btn-secondary" (click)="supprimer(don.id)">Supprimer</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="description-section">
+      <h3>Description</h3>
+      <p class="short-description">{{ don.descriptionCourte }}</p>
+
+      <p class="full-description">{{ don.descriptionComplete }}</p>
+
+      <ul>
+        @for (caracteristique of don.caracteristiques; track $index) {
+        <li>{{ caracteristique }}</li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== MODALE  ========== -->
+@if (isAttribuerModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Attribuer et Livrer le Don #{{ currentDonId }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Sélectionnez l'organisation ou la personne bénéficiaire de ce don pour finaliser la livraison.</p>
+
+      <label for="beneficiaire">Bénéficiaire :</label>
+      <input
+        id="beneficiaire"
+        type="text"
+        placeholder="Nom ou Numero de l'association ou de la personne"
+        [(ngModel)]="beneficiaireSelectionne"
+      >
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Annuler</button>
+      <button
+        class="btn-primary"
+        [disabled]="!beneficiaireSelectionne"
+        (click)="confirmerAttribution()"
+      >
+        Confirmer l'attribution et Livrer
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+@if (isDeclineModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content small-modal">
+    <div class="modal-header">
+      <h2>Décliner (Annuler) le Don #{{ currentDonId }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Veuillez fournir la raison pour laquelle ce don doit être annulé ou décliné.</p>
+
+      <label for="raison">Raison du déclin :</label>
+      <textarea
+        id="raison"
+        rows="4"
+        placeholder="Ex: Objet non conforme, Donateur injoignable, etc."
+        [(ngModel)]="raisonDeclin"
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Retour</button>
+      <button
+        class="btn-danger"
+        [disabled]="!raisonDeclin"
+        (click)="confirmerDeclin()"
+      >
+        Décliner (Annuler)
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+
+@if (isPublishModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content small-modal">
+    <div class="modal-header">
+      <h2>Confirmer la Publication du Don #{{ currentDonId }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Êtes-vous sûr de vouloir rendre ce don visible publiquement sur la plateforme ?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Annuler</button>
+      <button class="btn-primary" (click)="confirmerPublication()">
+        Oui, Publier
+      </button>
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,149 @@
+.principal{
+  position: relative;
+  top: 18vh;
+  box-sizing: border-box;
+  margin: auto;
+  padding: auto;
+  /* height: 98vh; */
+  /* background-color: #009688; */
+  width: 80vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.contenair{
+  margin: auto 20px;
+  width: 90%;
+  height: 80%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.principal .logo{
+  position: absolute;
+  top: -18vh;
+}
+.description{
+  background-image: linear-gradient(to right,#2563EB, #2E7D32);
+  box-shadow:
+    0 2px 1px 0
+    gray;
+  height: 100%;
+  width: 100%;
+  color: aliceblue;
+  padding-left: 80px;
+  /* padding-top:  10px; */
+}
+.form{
+  background-color: rgb(255, 255, 255);
+  box-shadow:
+    0 1px 2px 0
+    gray;
+  height: 100%;
+  width: 100%;
+  padding: 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.description h1{
+  padding-top: 20px;
+}
+.description h3{
+  font-weight: 200;
+}
+.description ul{
+  padding: 10px;
+}
+.description ul li{
+  padding-bottom: 20px;
+  font-weight: 100;
+}
+
+.form form{
+  /* justify-items: center; */
+  margin:  auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  height: 76%;
+  width: 80%;
+}
+
+.condition{
+  display: inline;
+}
+.condition .passwordForget{
+  float: right;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+.condition .condVal{
+  float: left;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+input[type="submit"]{
+  width: 100%;
+  height: 6vh;
+  border-radius: 20px;
+  outline: none;
+  background-color: #2563EB;
+  color: #fff;
+  bottom: 0;
+  border: none;
+  font-size: larger;
+  cursor: pointer;
+}
+input[type="submit"]:hover{
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+a{
+  text-decoration: none;
+  font-size: larger;
+}
+a,input[type="checkbox"]:hover{
+  opacity: 0.8;
+}
+
+input[type="email"]{
+  width: 100%;
+  height: 6vh;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid #ccc;
+  color: #706e6e;
+  margin-top: 4px;
+  padding: 10px;
+  bottom: 0;
+  font-size: large;
+  /* border: none; */
+
+}
+input[type="password"]{
+  width: 100%;
+  height: 6vh;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid #ccc;
+  color: #706e6e;
+  margin-top: 4px;
+  padding: 10px;
+  bottom: 0;
+  font-size: large;
+  /* border: none; */
+
+}
+label{
+  font-size: larger;
+}
+
+.error{
+  color: red;
+  font-size: medium;
+  text-align: center;
+}

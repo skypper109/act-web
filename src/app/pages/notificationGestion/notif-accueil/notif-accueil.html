@@ -1,0 +1,284 @@
+<div class="historique-container">
+  <header class="header">
+    <h1>Historique des notifications</h1>
+
+    <div class="actions">
+      <select
+        class="filter-select"
+        [(ngModel)]="selectedFilter"
+        (ngModelChange)="filterNotifications()"
+      >
+        <option value="Tous les destinataires">Tous les destinataires</option>
+        <option value="Associations">Associations</option>
+        <option value="Benevoles">Bénévoles</option>
+        <option value="Ong">Ong</option>
+      </select>
+
+      <button class="btn-filter">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="4" y1="21" x2="4" y2></line>
+          <line x1="4" y1="12" x2="4" y2></line>
+          <line x1="4" y1="3" x2="4" y2></line>
+          <line x1="12" y1="21" x2="12" y2></line>
+          <line x1="12" y1="12" x2="12" y2></line>
+          <line x1="12" y1="3" x2="12" y2></line>
+          <line x1="20" y1="21" x2="20" y2></line>
+          <line x1="20" y1="12" x2="20" y2></line>
+          <line x1="20" y1="3" x2="20" y2></line>
+        </svg>
+        Filtrer
+      </button>
+
+      <button class="btn-primary" (click)="nouvelleNotification()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Nouvelle Notification
+      </button>
+    </div>
+  </header>
+
+  <div class="notification-list">
+    @for (notif of filteredNotifications; track notif.id) {
+    <div class="notification-item">
+      <div class="content-left">
+        <div class="icon-container" [ngClass]="notif.type">
+          <ng-container *ngIf="notif.type !== 'probleme'">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </ng-container>
+          <ng-container *ngIf="notif.type === 'probleme'">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </ng-container>
+        </div>
+
+        <div class="text-details">
+          <div class="title">{{ notif.titre }}</div>
+          <div class="description">{{ notif.description }}</div>
+
+          <div class="meta-details" *ngIf="notif.type !== 'probleme'">
+            <span class="meta-label">Destinataires:</span>
+            <span class="destinataires-tag" [ngClass]="notif.destinataires">
+              <ng-container *ngIf="notif.destinataires === 'Tous'">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </ng-container>
+              <ng-container *ngIf="notif.destinataires === 'Associations'">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <line x1="20" y1="8" x2="20" y2="10"></line>
+                  <line x1="18" y1="9" x2="22" y2="9"></line>
+                </svg>
+              </ng-container>
+              <ng-container *ngIf="notif.destinataires === 'Benevoles'">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 21.7c-3.7 0-6.7-3-6.7-6.7S12 3 12 3s6.7 5.7 6.7 12c0 3.7-3 6.7-6.7 6.7z"
+                  />
+                  <circle cx="12" cy="11" r="3" />
+                </svg>
+              </ng-container>
+              <ng-container *ngIf="notif.destinataires === 'Ong'">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <line x1="20" y1="8" x2="20" y2="10"></line>
+                  <line x1="18" y1="9" x2="22" y2="9"></line>
+                </svg>
+              </ng-container>
+              {{ notif.destinataires }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-right">
+
+        <div class="date">
+          {{ formatDate(notif.date) | slice : 0 : 10 }} {{ formatDate(notif.date) | slice : 11 }}
+        </div>
+
+        <div class="read-stats" *ngIf="notif.type !== 'probleme'">
+          <span class="lu-par">Lu par</span>
+          <span class="count">{{ notif.luPar }}/{{ notif.totalDestinataires }}</span>
+          <button class="renvoyer-btn" (click)="renvoyer(notif.id)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 12A10 10 0 0 0 5.41 4.41L1 9M2 12h10M12 2L9 5l3 3" />
+            </svg>
+            Renvoyer
+          </button>
+          <div class="read-stats" *ngIf="notif.type !== 'probleme'">
+            <button class="delete-btn" (click)="deleteNotification(notif.id)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path
+                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                ></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+              Supprimer
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+
+<!-- ========== MODALE MODIFICATION ========== -->
+@if (showCreateModal) {
+<div class="modal">
+  <div class="modal-content">
+    <h3>Nouveau message</h3>
+    <label>Titre :</label>
+    <input [(ngModel)]="createNotification!.titre" />
+    <label>Type :</label>
+    <input [(ngModel)]="createNotification!.type" />
+    <label>Destinataires :</label>
+    <select [(ngModel)]="createNotification!.destinataires" id="">
+
+      <option value="Tous"><input type="checkbox" id="">Tous</option>
+      <option value="Associations"><input type="checkbox" id="">Associations</option>
+      <option value="Benevoles"><input type="checkbox" id="">Bénévoles</option>
+      <option value="Ong"><input type="checkbox" id="">Ong</option>
+
+    </select>
+    <label>Description :</label>
+    <textarea [(ngModel)]="createNotification!.description"></textarea>
+    <div class="modal-actions">
+      <button (click)="saveNew()">Enregistrer</button>
+      <button (click)="closeModals()">Annuler</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ========== MODALE SUPPRESSION ========== -->
+@if (showDeleteModal) {
+<div class="modal">
+  <div class="modal-content delete">
+    <h3>Confirmer la suppression</h3>
+    <p>
+      Voulez-vous vraiment supprimer <strong>{{ selectedNotification?.titre }}</strong> ?
+    </p>
+    <div class="modal-actions">
+      <button (click)="confirmDelete()">Oui, supprimer</button>
+      <button (click)="closeModals()">Annuler</button>
+    </div>
+  </div>
+</div>
+}

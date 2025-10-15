@@ -1,0 +1,164 @@
+.table-container {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+}
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+input{
+  width: 35vw;
+  height: 6vh;
+}
+
+select{
+  width: 12vw;
+  height: 6vh;
+  margin-right: 10px;
+}
+
+input, select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: large;
+}
+.btn-primary {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: large;
+  /* width: vw; */
+  height: 6vh;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 5px #0001;
+  margin-top: 20px;
+}
+
+th{
+  background-color: #F9FAFB;
+  color: #6B7280;
+  border-bottom: #6B7280 1px solid;
+  padding: 20px;
+  height: 10vh;
+}
+
+.tdTitre{
+  color: #111827;
+  font-weight: bold;
+}
+
+td{
+  color: #6B7280;
+  font-weight: 200;
+}
+td svg{
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  vertical-align: middle;
+
+}
+td svg path{
+  stroke: #ffffff;
+}
+
+.btn-filter {
+  background: #2b7a2b;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: large;
+  margin-right: 10px;
+  /* width: vw; */
+  height: 6vh;
+}
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: #6b728083 1px solid;
+  padding: 20px;
+  height: 10vh;
+}
+.status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.status.Livre {
+  background: #e6f9ed;
+  color: #2a9d46;
+}
+.status.Publie {
+  background: #edfbf2;
+  color: #2a9d46;
+}
+.status.En-attente {
+  background: #fff7d6;
+  color: #b68900;
+}
+.status.Decline {
+  background: #fde7e7;
+  color: #c62828;
+}
+.btn-details {
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+.btn-supp {
+  background: #fbc1c1;
+  color: #b50909;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+.pagination {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  /* padding: 2px; */
+  height: 10vh;
+  width: 100%;
+}
+.pagination button{
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: large;
+  /* width: vw; */
+  height: 6vh;
+
+}
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.pagination span {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 1rem;
+}

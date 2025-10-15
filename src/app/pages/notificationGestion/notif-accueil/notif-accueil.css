@@ -1,0 +1,436 @@
+/* --- STRUCTURE GLOBALE --- */
+.historique-container {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+/* --- EN-TÊTE --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+}
+
+/* Dropdown Filtre */
+.filter-select {
+  padding: 8px 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 1rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 35px;
+  width: 12vw;
+  height: 6vh;
+  margin-right: 10px;
+}
+
+/* Bouton Primaire */
+/* .btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 20px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 5px rgba(24, 144, 255, 0.3);
+  font-size: large;
+  margin-right: 10px;
+  height: 6vh;
+} */
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: large;
+  /* width: vw; */
+  height: 6vh;
+}
+
+.btn-primary:hover {
+  background-color: #40a9ff;
+}
+
+.btn-filter {
+  background: #2b7a2b;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: large;
+  margin-right: 10px;
+  /* width: vw; */
+  height: 6vh;
+}
+/* --- LISTE ET ÉLÉMENTS DE NOTIFICATION --- */
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 20px;
+  border-bottom: 1px solid #e8e8e8;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.content-left {
+  display: flex;
+  align-items: flex-start;
+  flex-grow: 1;
+  gap: 20px;
+}
+
+/* Conteneur de l'icône et couleurs par type */
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+}
+
+.icon-container.fonctionnalite,
+.icon-container.campagne,
+.icon-container.validation {
+  background-color: #1890ff;
+}
+
+.icon-container.maintenance {
+  background-color: #faad14;
+}
+
+.icon-container.probleme {
+  background-color: #52c41a;
+}
+
+/* Détails du texte */
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Tags Destinataires */
+.meta-details {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.meta-label {
+  color: #666;
+  margin-right: 8px;
+}
+
+.destinataires-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.destinataires-tag.Tous {
+  background-color: #f0f8ff;
+  color: #1890ff;
+}
+
+.destinataires-tag.Associations {
+  background-color: #fffbe6;
+  color: #fa8c16;
+}
+
+
+.destinataires-tag.Ong {
+  background-color: #fffbe6;
+  color: #f56d55;
+}
+.destinataires-tag.Benevoles {
+  background-color: #f6ffed;
+  color: #52c41a;
+}
+
+/* --- DATE ET ACTIONS (CÔTÉ DROIT) --- */
+.content-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 250px;
+  text-align: right;
+  padding-left: 20px;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #999;
+  margin-bottom: 25px;
+}
+
+.read-stats {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.read-stats .count {
+  font-weight: 600;
+  color: #333;
+}
+
+.renvoyer-btn,
+.delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  padding: 5px; /* Ajout d'un petit padding pour la zone de clic */
+}
+.renvoyer-btn {
+  color: #1890ff;
+}
+.delete-btn {
+  color: #ff4d4f; /* Couleur rouge pour la suppression */
+}
+.renvoyer-btn:hover,
+.delete-btn:hover {
+    opacity: 0.8;
+}
+
+
+/* --- RESPONSIVE BASIC --- */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .filter-select {
+    flex-grow: 1;
+  }
+
+  .notification-item {
+    flex-direction: column;
+  }
+
+  .content-left {
+    margin-bottom: 15px;
+  }
+
+  .content-right {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-width: auto;
+    padding-left: 60px;
+    margin-top: -10px;
+  }
+
+  .date {
+    margin-bottom: 0;
+    order: 2;
+  }
+}
+
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Animation de l'arrière-plan */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  width: clamp(300px, 90vw, 450px);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 10px rgba(0, 0, 0, 0.05);
+  animation: scaleIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Animation d'apparition du contenu */
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+/* ==================================== */
+.modal-content.delete {
+  background: #fffafa;
+  border: 1px solid #ffcccc;
+  text-align: center;
+}
+.modal-content.delete h3 {
+  color: #c62828;
+}
+.modal-content.delete p {
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+.modal-content.delete strong {
+  color: #333;
+}
+
+/* ==================================== */
+.modal-content label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
+}
+
+.modal-content textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+/* ==================================== */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Style de base pour TOUS les boutons */
+.modal button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+}
+
+.modal-actions button:first-child,
+.modal-content.vue > button:last-child {
+  background: #007bff;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.modal-actions button:first-child:hover,
+.modal-content.vue > button:last-child:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* Style du bouton secondaire (Annuler) */
+.modal-actions button:last-child,
+.modal-actions button:nth-child(2) {
+  background: #f0f0f0; /* Gris clair */
+  color: #333;
+}
+
+.modal-actions button:last-child:hover,
+.modal-actions button:nth-child(2):hover {
+  background: #e0e0e0;
+}
+
+.modal-content.delete .modal-actions button:first-child {
+  background: #c62828;
+  color: white;
+  box-shadow: 0 4px 10px rgba(198, 40, 40, 0.3);
+}
+
+.modal-content.delete .modal-actions button:first-child:hover {
+  background: #a11a1a;
+}
+
+.modal-content.vue > button:last-child {
+    margin-top: 3rem;
+    width: 100%;
+}

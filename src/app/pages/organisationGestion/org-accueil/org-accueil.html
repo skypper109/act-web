@@ -1,0 +1,130 @@
+<div class="table-container">
+  <div class="header-actions">
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Rechercher par nom ou catégorie"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+      />
+    </div>
+
+    <div class="rightMenu">
+      <select [(ngModel)]="filterStatut" (change)="applyFilters()">
+        <option value="Tous">Tous</option>
+        <option value="Actif">Actif</option>
+        <option value="En-attente">En attente</option>
+        <option value="Rejeté">Rejeté</option>
+      </select>
+      <button class="btn-primary">+ Nouvelle Organisation</button>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Domaine</th>
+        <th>Contact</th>
+        <th>Statut</th>
+        <th>Date de création</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let org of paginatedOrganisations">
+        <td class="tdTitre">{{ org.nom }}</td>
+        <td>{{ org.typeOrganisation }}</td>
+        <td>{{ org.emailContact }}<br />{{ org.telephoneContact }}</td>
+        <td>
+          <span class="status" [ngClass]="org.statut">
+            @if(org.statut === 'Approuver'){
+            <img src="edite/actif.svg" alt="" srcset="" />
+            } @else if(org.statut === 'Rejeter'){
+            <img src="edite/rejete.svg" alt="" srcset="" />
+            }
+            {{ org.statut }}
+          </span>
+        </td>
+        <td>{{ org.dateCreation }}</td>
+        <td>
+          <button (click)="openViewModal(org)">
+            <img src="edite/voir.svg" alt="" srcset="" />
+          </button>
+          <button (click)="openEditModal(org)">
+            <img src="edite/editer.svg" alt="" srcset="" />
+          </button>
+          <button (click)="openDeleteModal(org)">
+            <img src="edite/supprimer.svg" alt="" srcset="" />
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <div class="left">
+      <p>Affichage de {{ itemsPerPage }} elements sur {{ filteredOrganisations.length }}</p>
+    </div>
+    <div>
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+        Précédent
+      </button>
+      <span>{{ currentPage }}</span>
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage >= filteredOrganisations.length / itemsPerPage"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODALE APERCU ========== -->
+@if (showViewModal) {
+<div class="modal">
+  <div class="modal-content vue">
+    <div class="content">
+      <div class="btn">
+        <button  style="position: absolute;top: 0; right: 0; background-color: rgb(205, 30, 45);color: white;" (click)="closeModals()">&times; fermer</button>
+      </div>
+      <div class="icon">
+        <img src="edite/organisation.svg" alt="" srcset="" />
+      </div>
+      <div class="name-status">
+        <h3>{{ selectedOrganisation?.nom }}</h3>
+        <span class="status" [ngClass]="selectedOrganisation?.statut">{{ selectedOrganisation?.statut }}</span>
+        <p>{{ selectedOrganisation?.descriptionMission || 'N/A' }}</p>
+      </div>
+
+      <div class="info">
+        <p><strong>Type :</strong> {{ selectedOrganisation?.typeOrganisation }}</p>
+        <p><strong>Email :</strong> {{ selectedOrganisation?.emailRepresentant }}</p>
+        <p><strong>Téléphone :</strong> {{ selectedOrganisation?.telephoneRepresentant }}</p>
+        <p><strong>Adresse :</strong> {{ selectedOrganisation?.adresse || 'N/A' }}</p>
+        <!-- <p><strong>Description :</strong> </p> -->
+        <p><strong>Date de création :</strong> {{ selectedOrganisation?.dateCreation }}</p>
+      </div>
+
+    </div>
+    <!-- <button (click)="closeModals()">Fermer</button> -->
+  </div>
+</div>
+}
+
+<!-- ========== MODALE SUPPRESSION ========== -->
+@if (showDeleteModal) {
+<div class="modal">
+  <div class="modal-content delete">
+    <h3>Confirmer la suppression</h3>
+    <p>
+      Voulez-vous vraiment supprimer <strong>{{ selectedOrganisation?.nom }}</strong> ?
+    </p>
+    <div class="modal-actions">
+      <button (click)="confirmDelete()">Oui, supprimer</button>
+      <button (click)="closeModals()">Annuler</button>
+    </div>
+  </div>
+</div>
+}

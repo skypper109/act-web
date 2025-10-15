@@ -1,0 +1,77 @@
+<div class="dashboard">
+  <!-- Cartes statistiques -->
+  <div class="stats-grid">
+    @for (s of stats; track $index) {
+      <div class="stat-card">
+        <div class="icon"  [style.backgroundColor]="s.color">
+          <img src="{{ s.icon }}" alt="" srcset="">
+        </div>
+        <div class="info">
+          <p>{{ s.title }}</p>
+          <h3>{{ s.value }}</h3>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Graphiques -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h4>Activités par mois</h4>
+      <ngx-charts-bar-vertical
+        [results]="barChartData"
+        [xAxis]="true"
+        [yAxis]="true"
+        [showDataLabel]="true"
+        [scheme]="'vivid'"
+        [gradient]="false"
+        [xAxisLabel]="'Mois'"
+        [yAxisLabel]="'Nombre d’activités'"
+        [animations]="true">
+      </ngx-charts-bar-vertical>
+    </div>
+
+    <div class="chart-card">
+      <h4>Types d’activités</h4>
+      <ngx-charts-pie-chart
+        [results]="pieChartData"
+        [scheme]="'cool'"
+        [doughnut]="true"
+        [labels]="true"
+        >
+      </ngx-charts-pie-chart>
+    </div>
+  </div>
+
+  <!-- Activités récentes + Approbations -->
+  <div class="bottom-grid">
+    <div class="activity-card">
+      <h4>Activité récente</h4>
+      @for (a of recentActivities; track $index) {
+        <div class="activity-item">
+          <div>
+            <strong>{{ a.title }}</strong>
+            <p>{{ a.desc }}</p>
+          </div>
+          <span>{{ a.time }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="activity-card">
+      <h4>Approbations en attente</h4>
+      @for (p of pendingApprovals; track $index) {
+        <div class="approval-item">
+          <div>
+            <strong>{{ p.name }}</strong>
+            <p>{{ p.type }}</p>
+          </div>
+          <div class="actions">
+            <button class="approve" (click)="approve(p)">Approuver</button>
+            <button class="reject" (click)="reject(p)">Refuser</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

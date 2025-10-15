@@ -1,0 +1,170 @@
+<div class="table-container">
+  <div class="header-actions">
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Rechercher par nom ou catégorie"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+      />
+    </div>
+ 
+    <div class="rightMenu">
+      <select [(ngModel)]="filterStatut" (change)="applyFilters()">
+        <option value="Tous">Tous</option>
+        <option value="Actif">Actif</option>
+        <option value="En-attente">En attente</option>
+        <option value="Rejeté">Rejeté</option>
+      </select>
+      <button class="btn-primary">+ Nouvelle Association</button>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Catégorie</th>
+        <th>Contact</th>
+        <th>Statut</th>
+        <th>Date de création</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let asso of paginatedAssociations">
+        <td class="tdTitre">{{ asso.nom }}</td>
+        <td>{{ asso.categorie }}</td>
+        <td>{{ asso.email }}<br />{{ asso.telephone }}</td>
+        <td>
+          <span class="status" [ngClass]="asso.statut">
+            @if(asso.statut === 'Actif'){
+            <img src="edite/actif.svg" alt="" srcset="" />
+            } @else if(asso.statut === 'Rejeté'){
+            <img src="edite/rejete.svg" alt="" srcset="" />
+            }
+            {{ asso.statut }}
+          </span>
+        </td>
+        <td>{{ asso.dateCreation }}</td>
+        <td>
+          <button (click)="openViewModal(asso)">
+            <img src="edite/voir.svg" alt="" srcset="" />
+          </button>
+          <button (click)="openEditModal(asso)">
+            <img src="edite/editer.svg" alt="" srcset="" />
+          </button>
+          <button (click)="openDeleteModal(asso)">
+            <img src="edite/supprimer.svg" alt="" srcset="" />
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <div class="left">
+      <p>Affichage de {{ itemsPerPage }} elements sur {{ filteredAssociations.length }}</p>
+    </div>
+    <div>
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+        Précédent
+      </button>
+      <span>{{ currentPage }}</span>
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage >= filteredAssociations.length / itemsPerPage"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODALE APERCU ========== -->
+@if (showViewModal) {
+<div class="modal">
+  <div class="modal-content vue">
+    <div class="content">
+      <div class="btn">
+        <button  style="position: absolute;top: 0; right: 0; background-color: rgb(205, 30, 45);color: white;" (click)="closeModals()">&times; fermer</button>
+      </div>
+      <div class="icon">
+        <img src="edite/association.svg" alt="" srcset="" />
+      </div>
+      <div class="name-status">
+        <h3>{{ selectedAssociation?.nom }}</h3>
+        <span class="status" [ngClass]="selectedAssociation?.statut">{{ selectedAssociation?.statut }}</span>
+        <p>{{ selectedAssociation?.description || 'N/A' }}</p>
+      </div>
+
+      <div class="info">
+        <p><strong>Catégorie :</strong> {{ selectedAssociation?.categorie }}</p>
+        <p><strong>Email :</strong> {{ selectedAssociation?.email }}</p>
+        <p><strong>Téléphone :</strong> {{ selectedAssociation?.telephone }}</p>
+        <p><strong>Adresse :</strong> {{ selectedAssociation?.adresse || 'N/A' }}</p>
+        <!-- <p><strong>Description :</strong> </p> -->
+        <p><strong>Date de création :</strong> {{ selectedAssociation?.dateCreation }}</p>
+      </div>
+
+    </div>
+    @if (selectedAssociation?.statut == "En-attente") {
+    <div class="modal-actions">
+      <button (click)="validerAssociation(selectedAssociation!)">Valider</button>
+      <button (click)="refuserAssociation(selectedAssociation!)">Refuser</button>
+    </div>
+    }@else {
+      @if (selectedAssociation?.estActif) {
+        <button (click)="validerAssociation(selectedAssociation!)" style="background-color: brown;color: aliceblue;width: fit-content;">Desactiver</button>
+      }@else if(!selectedAssociation?.estActif && selectedAssociation?.statut !== 'Rejeté') {
+        <button (click)="validerAssociation(selectedAssociation!)" style="width: fit-content;">Reactiver</button>
+      }@else {
+
+        <button (click)="openDeleteModal(selectedAssociation!)" style="background-color: brown;color: aliceblue;width: fit-content;">Supprimer</button>
+      }
+    }
+    <!-- <button (click)="closeModals()">Fermer</button> -->
+  </div>
+</div>
+}
+
+<!-- ========== MODALE MODIFICATION ========== -->
+@if (showEditModal) {
+<div class="modal">
+  <div class="modal-content">
+    <h3>Modifier l'association</h3>
+    <label>Nom :</label>
+    <input [(ngModel)]="editedAssociation!.nom" />
+    <label>Catégorie :</label>
+    <input [(ngModel)]="editedAssociation!.categorie" />
+    <label>Email :</label>
+    <input [(ngModel)]="editedAssociation!.email" />
+    <label>Téléphone :</label>
+    <input [(ngModel)]="editedAssociation!.telephone" />
+    <label>Adresse :</label>
+    <input [(ngModel)]="editedAssociation!.adresse" />
+    <label>Description :</label>
+    <textarea [(ngModel)]="editedAssociation!.description"></textarea>
+    <div class="modal-actions">
+      <button (click)="saveEdit()">Enregistrer</button>
+      <button (click)="closeModals()">Annuler</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ========== MODALE SUPPRESSION ========== -->
+@if (showDeleteModal) {
+<div class="modal">
+  <div class="modal-content delete">
+    <h3>Confirmer la suppression</h3>
+    <p>
+      Voulez-vous vraiment supprimer <strong>{{ selectedAssociation?.nom }}</strong> ?
+    </p>
+    <div class="modal-actions">
+      <button (click)="confirmDelete()">Oui, supprimer</button>
+      <button (click)="closeModals()">Annuler</button>
+    </div>
+  </div>
+</div>
+}
