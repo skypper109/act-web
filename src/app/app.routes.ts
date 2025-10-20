@@ -14,6 +14,9 @@ import { DonAccueil } from './pages/donationGestion/don-accueil/don-accueil';
 import { DonDetail } from './pages/donationGestion/don-detail/don-detail';
 import { OrgAccueil } from './pages/organisationGestion/org-accueil/org-accueil';
 import { NotifAccueilComponent } from './pages/notificationGestion/notif-accueil/notif-accueil';
+import { OrgCreate } from './pages/organisationGestion/org-create/org-create';
+import { AssoCreate } from './pages/associationGestion/asso-create/asso-create';
+import { ParametreIndex } from './pages/parametres/parametre-index/parametre-index';
 
 export const routes: Routes = [
 
@@ -28,6 +31,8 @@ export const routes: Routes = [
       // Les routes pour la page des associations
       {path:'associations',component:AssoIndex,children:[
           {path:'',component:AssoAccueil},
+          {path:'create',component:AssoCreate},
+          {path:'edite/:id',component:AssoCreate},
         ],
         data: { titre: 'Gestion des associations' }
       },
@@ -35,6 +40,8 @@ export const routes: Routes = [
       // Les routes pour la page des organisations
       {path:'organisations',component:OrgIndex,children:[
           {path:'',component:OrgAccueil},
+          {path:'create',component:OrgCreate},
+          {path:'edite/:id',component:OrgCreate},
         ],data: { titre: 'Gestion des organisations' }
       },
 
@@ -61,16 +68,15 @@ export const routes: Routes = [
       ],data: { titre: 'Gestion des roles' }},
 
       // Les routes pour la page des paramètres
-      {path:'parametres',component:Role,children:[
-        {path:'',component:Dashboard},
-
-      ],data: { titre: 'Paramètres' }},
+      {path:'parametres',component:ParametreIndex,data: { titre: 'Paramètres' }},
 
       // Les routes pour la page du profil
-      {path:'profil',component:Profil,children:[
-        {path:'',component:Dashboard},
+      {path:'profil',component:Profil,data: { titre: 'Mon profil' }},
 
-      ],data: { titre: 'Mon profil' }},
+      // La partie de gestion de paramètres avancés (si nécessaire)
+      {path:'settings',component:Role,children:[
+      ],data: { titre: 'Paramètres avancés' }},
+
 
       // {path:'**',redirectTo:'dashboard'}
     ],

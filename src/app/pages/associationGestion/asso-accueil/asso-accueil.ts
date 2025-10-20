@@ -2,20 +2,17 @@ import { Component, NgModule, OnInit } from '@angular/core';
 import { Association } from '../../../models/association';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { Data } from '../../../services/data';
+import { Env } from '../../../env';
 
 @Component({
   selector: 'app-asso-accueil',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,RouterLink],
   templateUrl: './asso-accueil.html',
   styleUrl: './asso-accueil.css'
 })
 export class AssoAccueil implements OnInit {
-refuserAssociation(arg0: Association) {
-throw new Error('Method not implemented.');
-}
-validerAssociation(arg0: Association) {
-throw new Error('Method not implemented.');
-}
 
   associations: Association[] = [];
   filteredAssociations: Association[] = [];
@@ -31,27 +28,35 @@ throw new Error('Method not implemented.');
   selectedAssociation: Association | null = null;
   editedAssociation: Association | null = null;
 
-  ngOnInit(): void {
-    this.associations = [
-      { id:1,nom: 'Association Santé Pour Tous', categorie: 'Santé', email: 'sante@example.com', telephone: '+223 70 12 34 56', statut: 'Actif', dateCreation: '2023-07-15', estActif: true },
-      { id:2,nom: 'Éducation Pour Tous', categorie: 'Éducation', email: 'education@example.com', telephone: '+223 76 98 76 54', statut: 'En-attente', dateCreation: '2023-08-01' },
-      { id:3,nom: 'Environnement Vert', categorie: 'Environnement', email: 'environnement@example.com', telephone: '+223 79 11 22 33', statut: 'Desactif', dateCreation: '2023-06-22' , estActif: false},
-      { id:4,nom: 'Aide aux Enfants', categorie: 'Humanitaire', email: 'enfants@example.com', telephone: '+223 65 44 33 22', statut: 'Rejeté', dateCreation: '2023-08-05' },
-      { id:5,nom: 'Culture et Art du Mali', categorie: 'Culture', email: 'culture@example.com', telephone: '+223 77 88 99 00', statut: 'Actif', dateCreation: '2023-07-30', adresse: 'Bamako, Mali', description: 'Promotion de la culture malienne à travers divers événements et ateliers.' , estActif: true},
-      { id:6,nom: 'Sports Pour Tous', categorie: 'Sports', email: 'sports@example.com', telephone: '+223 66 55 44 33', statut: 'Actif', dateCreation: '2023-07-10' },
-      { id:7,nom: 'Développement Rural', categorie: 'Agriculture', email: 'rural@example.com', telephone: '+223 71 22 33 44', statut: 'En-attente', dateCreation: '2023-08-03' }
-    ];
-    this.applyFilters();
+  constructor(private data:Data,
+    private router: Router) { }
+
+  ngOnInit(){
+    this.data.getData(Env.ASSOCIATION+"list").subscribe(
+      (res: any) => {
+        this.associations = res && res.data ? res.data : [];
+        console.log(res && res.data ? res.data : res);
+        this.applyFilters();
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
 
+  // Fonction utilitaire pour formater la date
+  formatDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    const datePart = date.toLocaleDateString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+    const timePart = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return `${datePart}`;
+  }
   applyFilters(): void {
     this.filteredAssociations = this.associations.filter(a =>
       (this.filterStatut === 'Tous' || a.statut === this.filterStatut) && (
-      a.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      a.categorie.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      a.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       a.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      a.telephone.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
+      a.phone.toLowerCase().includes(this.searchTerm.toLowerCase()))
     );
   }
 
@@ -99,9 +104,17 @@ throw new Error('Method not implemented.');
     }
   }
 
-  confirmDelete() {
+  confirmDelete(id:number) {
     if (this.selectedAssociation) {
       this.associations = this.associations.filter(a => a.id !== this.selectedAssociation!.id);
+      this.data.deleteData(Env.ASSOCIATION,id).subscribe(
+        (res: any) => {
+          console.log('Association supprimée avec succès');
+        },
+        (error: any) => {
+          console.log('Erreur lors de la suppression de l\'association :', error);
+        }
+      );
       this.applyFilters();
       this.closeModals();
     }
@@ -113,4 +126,51 @@ throw new Error('Method not implemented.');
       return;
     }
   }
+
+
+
+  refuserAssociation(asso: Association) {
+
+    this.data.putData(Env.ASSOCIATION+"statut/", asso.id!, 'Rejete','statut').subscribe(
+      (res: any) => {
+        console.log('Association Rejete avec succès');
+        asso.statut = 'Rejete';
+
+      },
+      (error: any) => {
+        console.log('Erreur lors de la validation de l\'association :', error);
+      }
+    );
+    this.applyFilters();
+    this.closeModals();
+
+  }
+  validerAssociation(asso: Association) {
+    this.data.putData(Env.ASSOCIATION+"statut/", asso.id!,'Actif','statut').subscribe(
+      (res: any) => {
+        console.log('Association validée avec succès');
+        asso.statut = 'Actif';
+      },
+      (error: any) => {
+        console.log('Erreur lors de la validation de l\'association :', error);
+      }
+    );
+    this.applyFilters();
+    this.closeModals();
+  }
+  desactiveAssociation(asso: Association) {
+    this.data.putData(Env.ASSOCIATION+"statut/", asso.id!,'Desactif','statut').subscribe(
+      (res: any) => {
+        console.log('Association Desactiver avec succès');
+        asso.statut = 'Actif';
+      },
+      (error: any) => {
+        console.log('Erreur lors de la validation de l\'association :', error);
+      }
+    );
+    this.applyFilters();
+    this.closeModals();
+  }
+
+
 }

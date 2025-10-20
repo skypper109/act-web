@@ -52,7 +52,7 @@ export class Dashboard {
   // Approbations en attente
   pendingApprovals = [
     { name: 'Éducation Pour Tous', type: 'Association' },
-    { name: 'Fatou Camara', type: 'Bénévole' }
+    { name: 'Sante plus', type: 'Association' }
   ];
 
   approve(item: any) {

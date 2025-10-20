@@ -22,7 +22,7 @@ export class Organisation {
 
   // Informations Administratives
   numeroEnregistrement!: string;
-  dateCreation!: string; // Utiliser un format ISO 8601 pour la soumission
+  dateCreation!:Date // Utiliser un format ISO 8601 pour la soumission
   statut!: 'En-attente' | 'Approuver' | 'Rejeter';
   confirmationOfficielle!: boolean;
   estActif!: boolean;

@@ -1,0 +1,239 @@
+.form-container {
+  max-width: 1020px;
+  margin: 10px auto;
+  padding: 0 20px;
+}
+
+/* --- LIEN RETOUR --- */
+.back-link {
+  margin-bottom: 25px;
+}
+.back-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1890ff; /* Bleu */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+}
+.back-button:hover {
+  text-decoration: underline;
+}
+.back-button{
+  cursor: pointer;
+
+}
+/* --- SECTIONS DU FORMULAIRE --- */
+.form-section {
+  margin-bottom: 30px;
+  padding: 25px;
+}
+
+.card-style {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* --- MISE EN PAGE GRID --- */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px 30px;
+}
+
+.col-12 { width: 100%; }
+.col-6 { width: 50%; }
+.col-4 { width: 33.333%; }
+
+.col-6, .col-4, .col-12 {
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+/* --- LABELS ET CHAMPS --- */
+label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+}
+label::after {
+  content: "*";
+  color: #ff4d4f; /* Rouge pour les requis */
+}
+/* Retirer l'astérisque pour les labels non requis (ex: Site web, Code postal, Statut) */
+label[for="siteWeb"]::after,
+label[for="codePostal"]::after,
+label[for="statut"]::after {
+  content: none;
+}
+.checkbox-row label::after {
+  content: none; /* Pas d'astérisque sur le label de confirmation */
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #1890ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Champ Date avec Icône */
+.input-with-icon {
+  position: relative;
+}
+.input-with-icon input {
+  padding-right: 35px; /* Espace pour l'icône */
+}
+.input-with-icon svg {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: none; /* L'icône ne bloque pas le clic sur l'input */
+}
+
+/* --- LOGO UPLOAD --- */
+.logo-upload {
+  margin-top: 20px;
+}
+.logo-preview {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.preview-box {
+  width: 120px;
+  height: 120px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #999;
+  font-size: 0.8rem;
+}
+.file-input-wrapper button {
+  padding: 8px 15px;
+  border: 1px solid #d9d9d9;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.file-input-wrapper button:hover {
+  background-color: #f0f0f0;
+}
+.file-input-wrapper small {
+  display: block;
+  margin-top: 5px;
+  color: #999;
+  font-size: 0.75rem;
+}
+
+
+/* --- CHECKBOX --- */
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+.checkbox-row label {
+  font-weight: normal;
+  font-size: 0.95rem;
+  margin-top: 0;
+  margin-left: 8px; /* Espacement après la case */
+}
+.custom-checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+
+/* --- FOOTER ACTIONS --- */
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 20px 0;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary {
+  background-color: #21890f; /* Bouton "Enregistrer" */
+  color: white;
+  border: none;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #555;
+  border: 1px solid #d9d9d9;
+}
+
+/* --- MEDIA QUERIES (Responsive) --- */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    margin: 0;
+  }
+  .col-6, .col-4 {
+    width: 100%;
+    padding: 0 0 15px 0;
+  }
+  .form-section {
+    padding: 15px;
+  }
+  .form-footer {
+    flex-direction: column-reverse;
+  }
+  .form-footer button {
+    width: 100%;
+  }
+}

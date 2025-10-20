@@ -88,13 +88,17 @@ th, td {
   background: #e6f9ed;
   color: #2a9d46;
 }
-.status.En-attente {
+.status.En_attente {
   background: #fff7d6;
   color: #b68900;
 }
-.status.Rejeté {
+.status.Rejete{
   background: #fde7e7;
   color: #c62828;
+}
+.status.Desactif {
+  background: #fde7e7;
+  color: #b48f8f;
 }
 .pagination {
   margin-top: 1rem;

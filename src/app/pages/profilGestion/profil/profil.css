@@ -1,0 +1,148 @@
+.profil-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.card-style {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #1890ff; /* Couleur principale */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-info h2 {
+  font-size: 1.4rem;
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.role-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #f0f8ff;
+  color: #1890ff;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* --- Détails en lecture seule --- */
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.detail-item {
+  padding: 0;
+}
+
+.detail-item label {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 3px;
+}
+
+.detail-item p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+/* --- Mode Édition --- */
+.profile-edit .row {
+  display: flex;
+  margin-bottom: 15px;
+}
+.profile-edit .col-6 {
+  width: 50%;
+  padding: 0 10px;
+}
+
+/* Réutiliser les styles d'input du formulaire d'organisation */
+.profile-edit input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.profile-edit label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* Actions du footer */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+  grid-column: 1 / -1; /* Permet aux boutons de s'étendre dans le grid */
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary {
+  background-color: #2bbd59;
+  color: white;
+  border: none;
+}
+.btn-secondary {
+  background-color: #f0f2f5;
+  color: #555;
+  border: none;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .profile-details {
+    grid-template-columns: 1fr;
+  }
+  .profile-edit .row {
+    flex-direction: column;
+  }
+  .profile-edit .col-6 {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 15px;
+  }
+}

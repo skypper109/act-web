@@ -1,1 +1,66 @@
-<p>profil works!</p>
+<div class="profil-container">
+  <h1>Mon Profil</h1>
+
+  <div class="profile-card card-style">
+    <div class="profile-header">
+      <div class="profile-avatar"> 
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <div class="profile-info">
+        <h2>{{ profil.prenom }} {{ profil.nom }}</h2>
+        <p class="role-tag">{{ profil.role }}</p>
+      </div>
+    </div>
+
+    <div class="profile-details" *ngIf="!isEditing">
+      <div class="detail-item">
+        <label>Email</label>
+        <p>{{ profil.email }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Téléphone</label>
+        <p>{{ profil.telephone }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Date d'inscription</label>
+        <p>{{ profil.dateInscription }}</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" (click)="toggleEdit()">
+          Modifier le Profil
+        </button>
+      </div>
+    </div>
+
+    <div class="profile-edit" *ngIf="isEditing">
+      <form #editForm="ngForm" (ngSubmit)="saveProfile()">
+        <div class="row">
+          <div class="col-6">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" [(ngModel)]="editedProfil.prenom" name="prenom" required>
+          </div>
+          <div class="col-6">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" [(ngModel)]="editedProfil.nom" name="nom" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <label for="email">Email</label>
+            <input type="email" id="email" [(ngModel)]="editedProfil.email" name="email" required>
+          </div>
+          <div class="col-6">
+            <label for="telephone">Téléphone</label>
+            <input type="tel" id="telephone" [(ngModel)]="editedProfil.telephone" name="telephone" required>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Annuler</button>
+          <button type="submit" class="btn-primary" [disabled]="editForm.invalid">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

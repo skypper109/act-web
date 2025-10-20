@@ -1,0 +1,223 @@
+.settings-page {
+  max-width: 100%;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.card-style {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.settings-layout {
+  display: flex;
+  min-height: 450px; /* Hauteur minimale pour l'esthétique */
+  overflow: hidden;
+}
+
+/* --- Colonne de Navigation (Gauche) --- */
+.settings-nav {
+  width: 250px;
+  flex-shrink: 0;
+  background-color: #f7f9fa; /* Arrière-plan légèrement grisé */
+  border-right: 1px solid #f0f0f0;
+  padding: 15px 0;
+}
+
+.settings-nav button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.settings-nav button:hover {
+  background-color: #e6f7ff;
+}
+
+.settings-nav button.active {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  border-right: 3px solid #1890ff;
+}
+
+/* --- Contenu des Réglages (Droite) --- */
+.settings-content {
+  flex-grow: 1;
+  padding: 30px;
+}
+
+.settings-content h2 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.setting-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 15px;
+}
+.setting-item:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.setting-item label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.setting-item p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.setting-item select,
+.setting-item input[type="text"] {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.btn-secondary {
+  padding: 8px 15px;
+  background-color: #f0f2f5;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* --- Toggle Switch Styles --- */
+.setting-item.with-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-item.with-toggle .text-group {
+  flex-grow: 1;
+  max-width: 75%;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #52c41a; /* Vert succès */
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.slider.round {
+  border-radius: 25px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* --- Footer --- */
+.settings-footer {
+  text-align: right;
+  padding-top: 25px;
+}
+
+.settings-footer .btn-primary {
+  padding: 10px 20px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .settings-layout {
+    flex-direction: column;
+  }
+  .settings-nav {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0;
+  }
+  .settings-nav button {
+    display: inline-flex;
+    justify-content: center;
+    width: auto;
+    border-bottom: 3px solid transparent;
+  }
+  .settings-nav button.active {
+    border-right: none;
+    border-bottom: 3px solid #1890ff;
+    background-color: #f7f9fa; /* Pour simuler un onglet actif */
+  }
+}

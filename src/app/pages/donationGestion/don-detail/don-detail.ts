@@ -15,7 +15,7 @@ export class DonDetail implements OnInit {
     id: 101,
     titre: 'Fauteuil roulant',
     etat: 'Neuf',
-    statut: 'Publie',
+    statut: 'En-attente', // 'En-attente' | 'Livre' | 'Decline' | 'Publie'
     localisation: 'Bamako',
     type: 'Équipement',
     quantite: 12,
@@ -31,6 +31,13 @@ export class DonDetail implements OnInit {
     images: ['images/test/don1.png', 'images/test/don2.png', 'images/test/don3.png'],
   };
 
+
+
+  demandaires = [
+    { name: 'Diallo Sory', type: 'Benevole' },
+    { name: 'Dembele Seydou', type: 'Benevole' },
+    { name: 'Diallo Colo', type: 'Benevole' }
+  ];
 
   currentImageIndex: number = 0;
 
@@ -174,6 +181,15 @@ export class DonDetail implements OnInit {
     } else {
       console.log(`Naviguer vers la page de détails du don #${donId}`);
     }
+  }
+
+
+  approuver(item: any) {
+    alert(`${item.name} approuvé avec succes`);
+  }
+
+  rejeter(item: any) {
+    alert(`${item.name} refusé `);
   }
 
 }

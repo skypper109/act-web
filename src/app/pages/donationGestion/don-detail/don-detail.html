@@ -89,88 +89,115 @@
         </div>
       </div>
 
-      <div class="details-card">
-        <h2>{{ don.titre }}</h2>
+      <div class="detail-column">
 
-        <div class="detail-item">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 21.7c-3.7 0-6.7-3-6.7-6.7S12 3 12 3s6.7 5.7 6.7 12c0 3.7-3 6.7-6.7 6.7z" />
-            <circle cx="12" cy="11" r="3" />
-          </svg>
-          <span class="label">Localisation</span>
-          <span class="value">{{ don.localisation }}</span>
-        </div>
+        <div class="details-card">
+          <h2>{{ don.titre }}</h2>
 
-        <div class="detail-item">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-          </svg>
-          <span class="label">Type</span>
-          <span class="value">{{ don.type }}</span>
-        </div>
+          <div class="detail-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 21.7c-3.7 0-6.7-3-6.7-6.7S12 3 12 3s6.7 5.7 6.7 12c0 3.7-3 6.7-6.7 6.7z" />
+              <circle cx="12" cy="11" r="3" />
+            </svg>
+            <span class="label">Localisation</span>
+            <span class="value">{{ don.localisation }}</span>
+          </div>
 
-        <div class="detail-item">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M20 10V7a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v3m0 0v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10M4 10h16M7 10v12"
-            />
-          </svg>
-          <span class="label">Quantité</span>
-          <span class="value">{{ don.quantite }}</span>
-        </div>
+          <div class="detail-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            <span class="label">Type</span>
+            <span class="value">{{ don.type }}</span>
+          </div>
 
-        <div class="actions">
+          <div class="detail-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M20 10V7a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v3m0 0v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10M4 10h16M7 10v12"
+              />
+            </svg>
+            <span class="label">Quantité</span>
+            <span class="value">{{ don.quantite }}</span>
+          </div>
+
           <div class="actions">
-            @if (don.statut === 'Publie') {
-            <ng-container>
-              <button class="btn-primary" (click)="attribuerEtLivrer(don.id)">Attribuer et Livrer</button>
-              <button class="btn-edit" (click)="modifierAttribution(don.id)">
-                Modifier l'attribution
-              </button>
-              <button class="btn-secondary" (click)="declinerDon(don.id)">Revoquer la publication</button>
-            </ng-container>
-            } @else if(don.statut !== 'Livre' && don.statut !== 'Decline' ) {
-            <ng-container>
-              <button class="btn-primary" (click)="publier(don.id)">Publier</button>
-              <button class="btn-secondary" (click)="declinerDon(don.id)">Décliner</button>
-            </ng-container>
-            }@else {
-              <button class="btn-secondary" (click)="supprimer(don.id)">Supprimer</button>
-            }
+            <div class="actions">
+              @if (don.statut === 'Publie') {
+              <ng-container>
+                <button class="btn-primary" (click)="attribuerEtLivrer(don.id)">Attribuer et Livrer</button>
+                <button class="btn-edit" (click)="modifierAttribution(don.id)">
+                  Modifier l'attribution
+                </button>
+                <button class="btn-secondary" (click)="declinerDon(don.id)">Revoquer la publication</button>
+              </ng-container>
+              } @else if(don.statut !== 'Livre' && don.statut !== 'Decline' ) {
+              <ng-container>
+                <button class="btn-primary" (click)="publier(don.id)">Publier</button>
+                <button class="btn-secondary" (click)="declinerDon(don.id)">Décliner</button>
+              </ng-container>
+              }@else {
+                <button class="btn-secondary" (click)="supprimer(don.id)">Supprimer</button>
+              }
+            </div>
           </div>
         </div>
+
+        @if (don.statut === 'Publie' || don.statut === 'Livre') {
+        <div class="details-card">
+          <h2>Approbations en attente</h2>
+          @if (demandaires.length === 0) {
+          <p>Aucun demandeur en attente d'approbation.</p>
+          }
+          @else {
+            @for (p of demandaires; track $index) {
+            <div class="detail-itemCol">
+              <div>
+                <strong>{{ p.name }}</strong>
+                <p>{{ p.type }}</p>
+              </div>
+              <div class="actions">
+                <button class="approve" (click)="approuver(p)">Approuver</button>
+                <button class="reject" (click)="rejeter(p)">Refuser</button>
+              </div>
+            </div>
+            }
+          }
+        </div>
+        }
       </div>
+
     </div>
 
     <div class="description-section">

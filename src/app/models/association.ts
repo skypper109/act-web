@@ -1,12 +1,23 @@
 export class Association {
-  id!: number;
-  nom!: string;
-  categorie!: string;
+  id?: number;
+  name!: string;
+  categorie?: string;
   email!: string;
-  telephone!: string;
-  statut!: 'Actif' | 'En-attente' | 'Rejeté'| 'Desactif';
-  dateCreation!: string;
-  adresse?: string;
+  phone!: string;
+  statut!: 'Actif' | 'En_attente' | 'Rejete'| 'Desactif';
+  dateCreation!: Date;
+  address?: string;
   description?: string;
-  estActif?: boolean;
+  active?: boolean;
+  typeAssociation?:string;
+  logoUrl!:string ;
+  siteWeb!: string;
+  ville!: string;
+  codePostal!: string;
+  pays!: string;
+  nomComplet!:string;
+  fonction!: string;
+
+  numeroEnregistrement!: string;
+  confirmationOfficielle!: boolean;
 }

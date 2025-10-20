@@ -1,0 +1,103 @@
+<div class="settings-page">
+  <h1>Paramètres de l'application</h1>
+
+  <div class="settings-layout card-style">
+
+    <div class="settings-nav">
+      <button
+        [class.active]="selectedSection === 'general'"
+        (click)="selectSection('general')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        Général
+      </button>
+      <button
+        [class.active]="selectedSection === 'securite'"
+        (click)="selectSection('securite')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Sécurité
+      </button>
+      <button
+        [class.active]="selectedSection === 'notifications'"
+        (click)="selectSection('notifications')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        Notifications
+      </button>
+    </div>
+
+    <div class="settings-content">
+
+      <div *ngIf="selectedSection === 'general'">
+        <h2>Réglages Généraux</h2>
+
+        <div class="setting-item">
+          <label for="langue">Langue de l'interface</label>
+          <select id="langue" [(ngModel)]="settings.langue" name="langue">
+            @for (lang of languages; track lang) {
+              <option [value]="lang">{{ lang }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <label for="theme">Thème de couleur</label>
+          <select id="theme" [(ngModel)]="settings.theme" name="theme">
+            <option value="light">Clair</option>
+            <option value="dark">Sombre</option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="selectedSection === 'securite'">
+        <h2>Sécurité du Compte</h2>
+
+        <div class="setting-item">
+          <label>Changer le mot de passe</label>
+          <p>Mettre à jour votre mot de passe pour des raisons de sécurité.</p>
+          <button class="btn-secondary" (click)="changePassword()">Changer</button>
+        </div>
+
+        <div class="setting-item with-toggle">
+          <div class="text-group">
+            <label>Authentification à deux facteurs</label>
+            <p>Ajoutez une couche de sécurité supplémentaire à votre compte.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="settings.twoFactorAuth" name="twoFactorAuth">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="selectedSection === 'notifications'">
+        <h2>Préférences de Notification</h2>
+
+        <div class="setting-item with-toggle">
+          <div class="text-group">
+            <label>Notifications par Email</label>
+            <p>Recevez des alertes importantes sur votre boîte de réception.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="settings.notificationsEmail" name="notificationsEmail">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="setting-item with-toggle">
+          <div class="text-group">
+            <label>Notifications par SMS</label>
+            <p>Recevez des notifications urgentes par message texte.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="settings.notificationsSMS" name="notificationsSMS">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-footer">
+        <button class="btn-primary" (click)="saveSettings()">Sauvegarder les Réglages</button>
+      </div>
+
+    </div>
+  </div>
+</div>
