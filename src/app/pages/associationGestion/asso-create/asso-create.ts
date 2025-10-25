@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Data } from '../../../services/data';
 import { Env } from '../../../env';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-asso-create',
@@ -14,39 +16,22 @@ import { Env } from '../../../env';
 })
 export class AssoCreate implements OnInit {
   fichier!:File;
-  nouvelleAssociation: Association = {} as Association;
+  nouvelleAssociation: Association = {
+    categorie:"Éducation",
+    statut:"En_attente",
+    dateCreation:new Date(Date.now())
+  } as Association;
   isEditMode: boolean = false;
-
-  // fichier!:File;
-  // nouvelleAssociation: Association = {
-  //   typeAssociation: '',
-  //   description: '',
-  //   logoUrl: 'nn',
-  //   email: 'colo.diallo@gmail.com',
-  //   phone: '90897866',
-  //   siteWeb: 'www.malikoura.ml',
-  //   address: 'bamako',
-  //   ville: 'missira',
-  //   codePostal: '00223',
-  //   pays: 'Mali',
-
-  //   name: 'Mali koura',
-  //   fonction: 'President',
-  //   nomComplet: 'Diallo IS',
-  //   numeroEnregistrement: '82200766',
-  //   dateCreation: new Date(Date.now()),
-  //   statut: 'En_attente',
-  //   confirmationOfficielle: false,
-  //   active: false
-  // };
 
   assoID!:number;
 
 
   public currentStep: number = 1;
-  public orgTypes: string[] =  ['Humanitaire', 'Santé', 'Éducation', 'Environnement', 'Autre'];
+  public assoTypes: string[] =  ['Humanitaire', 'Santé', 'Éducation', 'Environnement', 'Autre'];
 
-  constructor(private data:Data,private router:Router,private route:ActivatedRoute) { }
+  constructor(private data:Data,private router:Router,private route:ActivatedRoute,
+        private toastr: ToastrService,
+        private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     // Vérifier si un ID est présent dans l'URL pour l'édition
@@ -75,53 +60,80 @@ export class AssoCreate implements OnInit {
     }
   }
 
+  // onSubmit(): void {
+  //   if (this.isFormValid()) {
+  //     if (this.isEditMode) {
+  //       // Mode édition
+  //       this.data.putDataWithFile(Env.ASSOCIATION, this.assoID, this.nouvelleAssociation,this.fichier).subscribe(
+  //         (res) => {
+  //           console.log('Association mise à jour avec succès :', res);
+  //           this.router.navigate(['/associations']);
+  //         },
+  //         (error) => {
+  //           console.error('Erreur lors de la mise à jour de l\'association :', error);
+  //         }
+  //       );
+  //       return;
+  //     }
+  //     this.data.postDataWithFile(Env.ASSOCIATION+"create",this.nouvelleAssociation,this.fichier).subscribe(
+  //     (res)=>{
+  //         console.log(res);
+  //         this.router.navigate(['/associations']);
+  //       },
+  //       (error)=>{
+  //         console.log(error);
+  //         // console.log(this.nouvelleAssociation)
+  //       }
+  //   );
+  //   } else {
+  //     alert("Veuillez remplir tous les champs obligatoires et confirmer les informations.");
+  //     console.log(this.nouvelleAssociation);
+  //   }
+  // }
+
   onSubmit(): void {
-    if (this.isFormValid()) {
-      if (this.isEditMode) {
-        // Mode édition
-        this.data.putDataWithFile(Env.ASSOCIATION, this.assoID, this.nouvelleAssociation,this.fichier).subscribe(
-          (res) => {
-            console.log('Association mise à jour avec succès :', res);
-            this.router.navigate(['/associations']);
-          },
-          (error) => {
-            console.error('Erreur lors de la mise à jour de l\'association :', error);
-          }
-        );
-        return;
-      }
-      this.data.postDataWithFile(Env.ASSOCIATION+"create",this.nouvelleAssociation,this.fichier).subscribe(
-      (res)=>{
-          console.log(res);
-          this.router.navigate(['/associations']);
-        },
-        (error)=>{
-          console.log(error);
-          // console.log(this.nouvelleAssociation)
-        }
-    );
-    } else {
-      alert("Veuillez remplir tous les champs obligatoires et confirmer les informations.");
-      console.log(this.nouvelleAssociation);
+    if (!this.isFormValid()) {
+      this.toastr.warning("Veuillez remplir tous les champs obligatoires.");
+      return;
     }
+
+    this.spinner.show();
+    const request$ = this.isEditMode
+      ? this.data.putDataWithFile(Env.ASSOCIATION, this.assoID, this.nouvelleAssociation, this.fichier)
+      : this.data.postDataWithFile(Env.ASSOCIATION + "create", this.nouvelleAssociation, this.fichier);
+
+    request$.subscribe(
+      () => {
+        this.spinner.hide();
+        this.toastr.success(`Association ${this.isEditMode ? 'mise à jour' : 'créée'} avec succès`);
+        this.router.navigate(['/associations']);
+      },
+      (error) => {
+        this.spinner.hide();
+        this.toastr.error(`Erreur lors de ${this.isEditMode ? 'la mise à jour' : 'la création'}`);
+        console.error(error);
+      }
+    );
   }
+
+
 
   isFormValid(): boolean {
     const org = this.nouvelleAssociation;
 
-    const isGeneralValid = org.typeAssociation && org.description;
+    const isGeneralValid = org.categorie && org.description;
 
     const isContactValid = org.phone && org.address && org.ville && org.pays;
 
     const isRepresentantValid = org.name && org.fonction  && org.phone;
 
-    const isAdminValid = org.numeroEnregistrement && org.dateCreation && org.confirmationOfficielle;
+    const isAdminValid = org.numeroEnregistrement  && org.confirmationOfficielle;
 
     return !!(isGeneralValid && isContactValid && isRepresentantValid && isAdminValid);
   }
 
   annuler(): void {
-    console.log("Action: Annuler le formulaire / Retour à la liste");
+    this.router.navigate(['/associations']);
   }
   precedentStep(): void {
     if (this.currentStep > 1) {

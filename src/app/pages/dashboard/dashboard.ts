@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Color, NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,8 +9,13 @@ import { Color, NgxChartsModule } from '@swimlane/ngx-charts';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
 
+  constructor(private spinner:NgxSpinnerService,private toastr:ToastrService){}
+
+  ngOnInit(): void {
+      
+  }
   // Cartes statistiques
   stats = [
     { title: 'Associations', value: 42, icon: 'dashboard/association.svg', color: '#6366F1' },

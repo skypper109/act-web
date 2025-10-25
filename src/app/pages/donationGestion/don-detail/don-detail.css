@@ -36,16 +36,30 @@
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  margin-left: 6px;
-  height: 40px;
+  /* margin-left: 6px; */
+  height: 35px;
 }
 .actions .approve {
-  background: #2E7D32;
+  background: #2e7d3264;
   color: white;
+  height: 25px;
+  padding: 8px;
 }
 .actions .reject {
   background: #E5E7EB;
   color: #374151;
+  height: 25px;
+  padding: 8px;
+}
+.actions .detail {
+  background: #1c58d186;
+  color: #374151;
+  height: 25px;
+  padding: 8px;
+}
+.actions img{
+  height: 20px;
+  width: 20px;
 }
 /* --- EN-TÊTE (HEADER) --- */
 header {
@@ -309,9 +323,9 @@ a{
   color: white;
   box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
 }
-.btn-edit:hover {
-  background-color: #1565C0; /* Bleu plus foncé */
-  transform: translateY(-2px);
+.btn-edit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 /* --- SECTION DESCRIPTION --- */
 .description-section {
@@ -362,6 +376,83 @@ a{
   background-color: (--primary-color);
   border-radius: 50%;
 }
+/* Conteneur principal */
+.relative {
+  position: relative;
+}
+
+/* Input du champ de recherche */
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.4);
+}
+
+/* Liste de suggestions */
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  margin-top: 5px;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  z-index: 9999;
+  padding: 0;
+  list-style: none;
+}
+
+/* Élément individuel */
+.suggestions li {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+/* Dernier élément sans bordure */
+.suggestions li:last-child {
+  border-bottom: none;
+}
+
+/* Texte principal (nom) */
+.suggestions li strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Texte secondaire (numéro de téléphone) */
+.suggestions li small {
+  color: #777;
+  font-size: 13px;
+}
+
+/* Effet hover */
+.suggestions li:hover {
+  background-color: #f0f7ff;
+}
+
+/* Quand il n’y a pas de résultats */
+.no-results {
+  padding: 10px 14px;
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+}
+
 
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
@@ -492,7 +583,10 @@ a{
   opacity: 0.6;
   cursor: not-allowed;
 }
-
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 /* Animation d'ouverture */
 @keyframes slideIn {
   from {

@@ -3,6 +3,14 @@ import { Don } from '../../../models/don';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { DONATION_REQUESTS_MOCK, DONS_MOCK, DonService } from '../../../services/don-service';
+import { Data } from '../../../services/data';
+import { DonIndex } from '../don-index/don-index';
+import { error } from 'console';
+import { Env } from '../../../env';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { DonDetailDto } from '../../../models/don-detail';
 
 @Component({
   selector: 'app-don-accueil',
@@ -11,41 +19,54 @@ import { Router } from '@angular/router';
   styleUrl: './don-accueil.css'
 })
 export class DonAccueil implements OnInit {
-supprimer(_t39: Don) {
-throw new Error('Method not implemented.');
-}
 
-  dons: Don[] = [];
-  filteredDons: Don[] = [];
+  loading = false;
+
+  supprimer(_t39: Don) {
+  throw new Error('Method not implemented.');
+  }
+
+  dons: DonDetailDto[] = [];
+  filteredDons: DonDetailDto[] = [];
   searchTerm = '';
   filterStatut = 'Tous';
   currentPage = 1;
   itemsPerPage = 5;
 
-  constructor(private route:Router) { }
+  constructor(private route:Router,private data:Data,
+      private toastr: ToastrService,
+      private spinner: NgxSpinnerService
+    ) {}
 
-  ngOnInit(): void {
-    this.dons = [
-      { materiel: 'Fauteuil roulant', type: 'Matériel médical', donateur: 'Pharmacie Centrale', beneficiaire: 'Hôpital Gabriel Touré', statut: 'Livre' },
-      { materiel: 'Béquilles (5 paires)', type: 'Matériel médical', donateur: 'ONG Santé Mali', beneficiaire: 'Non attribué', statut: 'En-attente' },
-      { materiel: 'Tensiomètres (10)', type: 'Matériel médical', donateur: 'Dr. Keita', beneficiaire: 'Centre de Santé Communautaire', statut: 'Publie' },
-      { materiel: 'Lunettes (15 paires)', type: 'Matériel médical', donateur: 'Opticien Solidaire', beneficiaire: 'Non attribué', statut: 'En-attente' },
-      { materiel: 'Médicaments', type: 'Pharmaceutique', donateur: 'Pharmacie du Peuple', beneficiaire: 'Non attribué', statut: 'Decline' },
-    ];
-    this.applyFilters();
-  }
+    ngOnInit(): void {
+      this.loadAssociations();
+    }
 
+    loadAssociations() {
+      this.spinner.show();
+      this.data.getData(Env.DONATION).subscribe(
+        (res: any) => {
+          this.dons = res?.data ?? [];
+          this.applyFilters();
+          this.spinner.hide();
+        },
+        (error: any) => {
+          this.spinner.hide();
+          this.toastr.error("Impossible de charger la liste des Dons.", "Erreur");
+          console.error(error);
+        }
+      );
+    }
   applyFilters(): void {
     this.filteredDons = this.dons.filter(d =>
-      (this.filterStatut === 'Tous' || d.statut === this.filterStatut) &&(
-      d.materiel.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      d.type.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      d.donateur.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      d.beneficiaire.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      (this.filterStatut === 'Tous' || d.isAvailable === this.filterStatut) &&(
+      d.descriptionComplete.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      d.typeDon.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      d.descriptionCourte.toLowerCase().includes(this.searchTerm.toLowerCase()))
     );
   }
-  
-  get paginatedDons(): Don[] {
+
+  get paginatedDons(): DonDetailDto[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredDons.slice(start, start + this.itemsPerPage);
   }
@@ -57,8 +78,38 @@ throw new Error('Method not implemented.');
     }
   }
 
-  detail(don: Don) {
+  detail(don: DonDetailDto) {
     console.log("Détail du don:", don);
-    this.route.navigateByUrl('donations/detail');
+    this.route.navigate(['donations/detail',don.id]);
   }
+
+  // createDon(){
+
+  //   for (let i = 0; i < DONS_MOCK.length; i++) {
+  //     const elem = DONS_MOCK[i];
+  //     this.data.postDataWithFile(Env.DONATION,elem,undefined,"donation").subscribe(
+  //       (rest)=>{
+  //         console.log("response "+i+1+" : "+rest);
+  //       },
+  //       (err)=>{
+  //         console.log("erreur "+i+1+" : "+err);
+  //       }
+  //     )
+  //   }
+  // }
+  createDon(){
+
+    for (let i = 0; i < DONS_MOCK.length; i++) {
+      const elem = DONATION_REQUESTS_MOCK[i];
+      this.data.postDataWithFile(Env.DEMANDE_DONATION,elem,undefined,"demandeDon").subscribe(
+        (rest)=>{
+          console.log("response "+i+1+" : "+rest);
+        },
+        (err)=>{
+          console.log("erreur "+i+1+" : "+err);
+        }
+      )
+    }
+  }
+
 }

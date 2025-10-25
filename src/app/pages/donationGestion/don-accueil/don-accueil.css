@@ -99,19 +99,19 @@ th, td {
   border-radius: 6px;
   font-size: 0.9rem;
 }
-.status.Livre {
+.status.LIVRE {
   background: #e6f9ed;
   color: #2a9d46;
 }
-.status.Publie {
+.status.PUBLIE {
   background: #edfbf2;
   color: #2a9d46;
 }
-.status.En-attente {
+.status.EN_ATTENTE {
   background: #fff7d6;
   color: #b68900;
 }
-.status.Decline {
+.status.DECLINE {
   background: #fde7e7;
   color: #c62828;
 }

@@ -8,10 +8,10 @@
         [(ngModel)]="selectedFilter"
         (ngModelChange)="filterNotifications()"
       >
-        <option value="Tous les destinataires">Tous les destinataires</option>
-        <option value="Associations">Associations</option>
-        <option value="Benevoles">Bénévoles</option>
-        <option value="Ong">Ong</option>
+        <option value="Tous">Tous les destinataires</option>
+        <option value="associations">Associations</option>
+        <option value="benevoles">Bénévoles</option>
+        <option value="ong">Ong</option>
       </select>
 
       <button class="btn-filter">
@@ -99,12 +99,12 @@
 
         <div class="text-details">
           <div class="title">{{ notif.titre }}</div>
-          <div class="description">{{ notif.description }}</div>
+          <div class="Contenu">{{ notif.contenu }}</div>
 
           <div class="meta-details" *ngIf="notif.type !== 'probleme'">
             <span class="meta-label">Destinataires:</span>
             <span class="destinataires-tag" [ngClass]="notif.destinataires">
-              <ng-container *ngIf="notif.destinataires === 'Tous'">
+              <ng-container *ngIf="notif.destinataires === 'tous'">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -122,7 +122,7 @@
                   <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
               </ng-container>
-              <ng-container *ngIf="notif.destinataires === 'Associations'">
+              <ng-container *ngIf="notif.destinataires === 'associations'">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -140,7 +140,7 @@
                   <line x1="18" y1="9" x2="22" y2="9"></line>
                 </svg>
               </ng-container>
-              <ng-container *ngIf="notif.destinataires === 'Benevoles'">
+              <ng-container *ngIf="notif.destinataires === 'benevoles'">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -158,7 +158,7 @@
                   <circle cx="12" cy="11" r="3" />
                 </svg>
               </ng-container>
-              <ng-container *ngIf="notif.destinataires === 'Ong'">
+              <ng-container *ngIf="notif.destinataires === 'ong'">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -185,13 +185,13 @@
       <div class="content-right">
 
         <div class="date">
-          {{ formatDate(notif.date) | slice : 0 : 10 }} {{ formatDate(notif.date) | slice : 11 }}
+          {{ notif.dateCreation | date:'yyyy-MM-dd' }} {{ notif.dateCreation | date:'HH:mm' }}
         </div>
 
         <div class="read-stats" *ngIf="notif.type !== 'probleme'">
           <span class="lu-par">Lu par</span>
-          <span class="count">{{ notif.luPar }}/{{ notif.totalDestinataires }}</span>
-          <button class="renvoyer-btn" (click)="renvoyer(notif.id)">
+          <span class="count">{{ notif.etat}}</span>
+          <button class="renvoyer-btn" (click)="notif.id != null && renvoyer(notif.id)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -208,7 +208,7 @@
             Renvoyer
           </button>
           <div class="read-stats" *ngIf="notif.type !== 'probleme'">
-            <button class="delete-btn" (click)="deleteNotification(notif.id)">
+            <button class="delete-btn" (click)="notif.id != null && deleteNotification(notif.id)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -245,22 +245,23 @@
   <div class="modal-content">
     <h3>Nouveau message</h3>
     <label>Titre :</label>
-    <input [(ngModel)]="createNotification!.titre" />
+    <input [(ngModel)]="newNotif!.titre" />
     <label>Type :</label>
-    <input [(ngModel)]="createNotification!.type" />
+    <input [(ngModel)]="newNotif!.type" />
     <label>Destinataires :</label>
-    <select [(ngModel)]="createNotification!.destinataires" id="">
+    <select [(ngModel)]="newNotif!.destinataires" id="">
 
-      <option value="Tous"><input type="checkbox" id="">Tous</option>
-      <option value="Associations"><input type="checkbox" id="">Associations</option>
-      <option value="Benevoles"><input type="checkbox" id="">Bénévoles</option>
-      <option value="Ong"><input type="checkbox" id="">Ong</option>
+      <option value="tous"><input type="checkbox" id="">Tous</option>
+      <option value="associations"><input type="checkbox" id="">Associations</option>
+      <option value="benevoles"><input type="checkbox" id="">Bénévoles</option>
+      <option value="ong"><input type="checkbox" id="">Ong</option>
 
     </select>
-    <label>Description :</label>
-    <textarea [(ngModel)]="createNotification!.description"></textarea>
+    <label>Contenu :</label>
+    <textarea [(ngModel)]="newNotif!.contenu"></textarea>
     <div class="modal-actions">
-      <button (click)="saveNew()">Enregistrer</button>
+      <button mat-raised-button color="primary" [class.spinner]="loading" [disabled]="loading" (click)="saveNew()">Enregistrer</button>
+      <!-- <button (click)="saveNew()">Enregistrer</button> -->
       <button (click)="closeModals()">Annuler</button>
     </div>
   </div>

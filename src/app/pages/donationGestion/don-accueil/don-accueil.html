@@ -12,13 +12,13 @@
     <div class="rightMenu">
       <select [(ngModel)]="filterStatut" (ngModelChange)="applyFilters()">
         <option value="Tous">Tous les statuts</option>
-        <option value="En-attente">En attente</option>
-        <option value="Publie">Publié</option>
-        <option value="Livre">Livré</option>
-        <option value="Decline">Decliné</option>
+        <option value="EN_ATTENTE">En attente</option>
+        <option value="PUBLIE">Publié</option>
+        <option value="LIVRE">Livré</option>
+        <option value="DECLINE">Decliné</option>
       </select>
       <button class="btn-filter">Filtrer</button>
-      <button class="btn-primary">+ Faire un Don</button>
+      <button class="btn-primary" (click)="createDon()">+ Faire un Don</button>
     </div>
   </div>
 
@@ -35,18 +35,18 @@
     </thead>
     <tbody>
       <tr *ngFor="let don of paginatedDons">
-        <td class="tdTitre">{{ don.materiel }}</td>
-        <td>{{ don.type }}</td>
-        <td>{{ don.donateur }}</td>
-        <td>{{ don.beneficiaire }}</td>
+        <td class="tdTitre">{{ don.title }}</td>
+        <td>{{ don.typeDon }}</td>
+        <td>{{ don.donorId }}</td>
+        <td>{{ don.donorName }}</td>
         <td>
-          <span class="status" [ngClass]="don.statut">
-            @if(don.statut === 'Livre'){
+          <span class="status" [ngClass]="don.isAvailable">
+            @if(don.isAvailable == 'LIVRE'){
             <img src="edite/actif.svg" alt="" srcset="" />
-            } @else if(don.statut === 'Decline'){
+            } @else if(don.isAvailable == 'DECLINE'){
             <img src="edite/rejete.svg" alt="" srcset="" />
             }
-            {{ don.statut }}
+            {{ don.isAvailable }}
           </span>
         </td>
         <td>

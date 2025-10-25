@@ -259,9 +259,17 @@ export class OrgAccueil  implements OnInit {
     }
   }
 
-  confirmDelete() {
+  confirmDelete(id:number) {
     if (this.selectedOrganisation) {
       this.organisations = this.organisations.filter(a => a.id !== this.selectedOrganisation!.id);
+      this.data.deleteData(Env.ASSOCIATION,id).subscribe(
+        (res: any) => {
+          console.log('Organisation supprimée avec succès');
+        },
+        (error: any) => {
+          console.log('Erreur lors de la suppression de l\'Organisation :', error);
+        }
+      );
       this.applyFilters();
       this.closeModals();
     }

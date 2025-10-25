@@ -6,10 +6,20 @@ export class Env {
    LOGIN=Env.URL_API+"loginAdmin";
 
   public static
-    ASSOCIATION=Env.URL_API+"association/";
+    ASSOCIATION=Env.URL_API+"associations/";
 
   public static
     ORGANISATION=Env.URL_API+"ong/";
 
+  public static
+    NOTIFICATION=Env.URL_API+"notification/";
 
+  public static
+    DONATION=Env.URL_API+"donations/";
+
+  public static
+    DEMANDE_DONATION=Env.URL_API+"demande-dons/";
+
+  public static
+    LIST_USER=Env.DONATION+"users";
 }

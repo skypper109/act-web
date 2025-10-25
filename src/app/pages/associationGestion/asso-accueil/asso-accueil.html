@@ -51,7 +51,7 @@
           <button (click)="openViewModal(asso)">
             <img src="edite/voir.svg" alt="" srcset="" />
           </button>
-          <button [routerLink]="['/associations/edite',asso.id]">
+          <button (click)="detail(asso)">
             <img src="edite/editer.svg" alt="" srcset="" />
           </button>
           <button (click)="openDeleteModal(asso)">

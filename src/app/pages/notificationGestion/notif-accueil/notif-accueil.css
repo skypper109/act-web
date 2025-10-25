@@ -174,22 +174,22 @@
   font-size: 0.85rem;
 }
 
-.destinataires-tag.Tous {
+.destinataires-tag.tous {
   background-color: #f0f8ff;
   color: #1890ff;
 }
 
-.destinataires-tag.Associations {
+.destinataires-tag.associations {
   background-color: #fffbe6;
   color: #fa8c16;
 }
 
 
-.destinataires-tag.Ong {
+.destinataires-tag.ong {
   background-color: #fffbe6;
   color: #f56d55;
 }
-.destinataires-tag.Benevoles {
+.destinataires-tag.benevoles {
   background-color: #f6ffed;
   color: #52c41a;
 }

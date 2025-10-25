@@ -4,8 +4,8 @@ export class Association {
   categorie?: string;
   email!: string;
   phone!: string;
-  statut!: 'Actif' | 'En_attente' | 'Rejete'| 'Desactif';
-  dateCreation!: Date;
+  statut?:   'Actif' | 'En_attente' | 'Rejete'| 'Desactif';
+  dateCreation: Date = new Date(Date.now());
   address?: string;
   description?: string;
   active?: boolean;

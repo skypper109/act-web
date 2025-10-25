@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container" (blur)="closeModal()">
   <header>
     <div class="header-content">
       <a routerLink="../" style="display: flex; padding: 10px; gap: 10px">
@@ -42,8 +42,8 @@
     <div class="main-info-section">
       <div class="image-carousel">
         <div class="image-wrapper">
-          <img [src]="don.images[currentImageIndex]" [alt]="don.titre" class="main-image" />
-          <span class="statut-badge" [ngClass]="don.statut">{{ don.statut }}</span>
+          <img [src]="don.imageUrls[currentImageIndex]" [alt]="don.title" class="main-image" />
+          <span class="statut-badge" [ngClass]="don.isAvailable">{{ don.isAvailable }}</span>
         </div>
 
         <button class="arrow prev" (click)="prevImage()">
@@ -78,7 +78,7 @@
         </button>
 
         <div class="dots-indicator">
-          @for (image of don.images; track $index) {
+          @for (image of don.imageUrls; track $index) {
           <span
             class="dot"
             [class.active]="currentImageIndex === $index"
@@ -90,9 +90,8 @@
       </div>
 
       <div class="detail-column">
-
         <div class="details-card">
-          <h2>{{ don.titre }}</h2>
+          <h2>{{ don.title }}</h2>
 
           <div class="detail-item">
             <svg
@@ -106,11 +105,13 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <path d="M12 21.7c-3.7 0-6.7-3-6.7-6.7S12 3 12 3s6.7 5.7 6.7 12c0 3.7-3 6.7-6.7 6.7z" />
+              <path
+                d="M12 21.7c-3.7 0-6.7-3-6.7-6.7S12 3 12 3s6.7 5.7 6.7 12c0 3.7-3 6.7-6.7 6.7z"
+              />
               <circle cx="12" cy="11" r="3" />
             </svg>
             <span class="label">Localisation</span>
-            <span class="value">{{ don.localisation }}</span>
+            <span class="value">{{ don.location }}</span>
           </div>
 
           <div class="detail-item">
@@ -129,7 +130,7 @@
               <polyline points="14 2 14 8 20 8" />
             </svg>
             <span class="label">Type</span>
-            <span class="value">{{ don.type }}</span>
+            <span class="value">{{ don.typeDon }}</span>
           </div>
 
           <div class="detail-item">
@@ -149,55 +150,74 @@
               />
             </svg>
             <span class="label">Quantité</span>
-            <span class="value">{{ don.quantite }}</span>
+            <span class="value">{{ don.quantity }}</span>
           </div>
 
           <div class="actions">
             <div class="actions">
-              @if (don.statut === 'Publie') {
+              @if (don.isAvailable === 'PUBLIE') {
               <ng-container>
-                <button class="btn-primary" (click)="attribuerEtLivrer(don.id)">Attribuer et Livrer</button>
-                <button class="btn-edit" (click)="modifierAttribution(don.id)">
-                  Modifier l'attribution
+                <button class="btn-primary" (click)="attribuerEtLivrer(don.id)">
+                  Attribuer et Livrer
                 </button>
-                <button class="btn-secondary" (click)="declinerDon(don.id)">Revoquer la publication</button>
+                <button class="btn-secondary" (click)="declinerDon(don.id)">
+                  Revoquer la publication
+                </button>
               </ng-container>
-              } @else if(don.statut !== 'Livre' && don.statut !== 'Decline' ) {
+              } @else if(don.isAvailable !== 'LIVRE' && don.isAvailable !== 'DECLINE' ) {
               <ng-container>
                 <button class="btn-primary" (click)="publier(don.id)">Publier</button>
                 <button class="btn-secondary" (click)="declinerDon(don.id)">Décliner</button>
               </ng-container>
               }@else {
-                <button class="btn-secondary" (click)="supprimer(don.id)">Supprimer</button>
+                <button class="btn-edit" (click)="modifierAttribution(don.id)" [disabled]="true">
+                  Modifier l'attribution
+                </button>
               }
             </div>
           </div>
         </div>
 
-        @if (don.statut === 'Publie' || don.statut === 'Livre') {
+        @if (don.isAvailable === 'PUBLIE' || don.isAvailable === 'LIVRE') {
         <div class="details-card">
+          @if (don.isAvailable == 'PUBLIE') {
           <h2>Approbations en attente</h2>
-          @if (demandaires.length === 0) {
+          }@else {
+          <h2>Don donner a</h2>
+          } @if (demandaires.length === 0) {
           <p>Aucun demandeur en attente d'approbation.</p>
-          }
-          @else {
-            @for (p of demandaires; track $index) {
-            <div class="detail-itemCol">
-              <div>
-                <strong>{{ p.name }}</strong>
-                <p>{{ p.type }}</p>
-              </div>
-              <div class="actions">
-                <button class="approve" (click)="approuver(p)">Approuver</button>
-                <button class="reject" (click)="rejeter(p)">Refuser</button>
-              </div>
+          } @else { @for (p of demandaires; track $index) {
+          <div class="detail-itemCol">
+            <div>
+              <strong
+                >{{ p.name }}
+                <sup
+                  *ngIf="p.status == 'APPROVED'"
+                  style="background-color: green; color: aliceblue"
+                  >Accepter</sup
+                >
+              </strong>
+              <p>{{ p.type }}</p>
+            </div>
+
+            @if (don.isAvailable == 'PUBLIE') {
+            <div class="actions">
+              <button class="approve" (click)="approuver(p)">
+                <img src="edite/actif.svg" alt="" srcset="" />
+              </button>
+              <button class="detail" (click)="viewDetails(p)">
+                <img src="edite/voir.svg" alt="" srcset="" />
+              </button>
+              <button class="reject" (click)="rejeter(p)">
+                <img src="edite/rejete.svg" alt="" srcset="" />
+              </button>
             </div>
             }
-          }
+          </div>
+          } }
         </div>
         }
       </div>
-
     </div>
 
     <div class="description-section">
@@ -215,7 +235,6 @@
   </div>
 </div>
 
-
 <!-- ========== MODALE  ========== -->
 @if (isAttribuerModalOpen) {
 <div class="modal-overlay">
@@ -225,31 +244,54 @@
       <button class="close-btn" (click)="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <p>Sélectionnez l'organisation ou la personne bénéficiaire de ce don pour finaliser la livraison.</p>
+      <p>
+        Sélectionnez l'organisation ou la personne bénéficiaire de ce don pour finaliser la
+        livraison.
+      </p>
 
-      <label for="beneficiaire">Bénéficiaire :</label>
-      <input
-        id="beneficiaire"
-        type="text"
-        placeholder="Nom ou Numero de l'association ou de la personne"
-        [(ngModel)]="beneficiaireSelectionne"
-      >
+      <div class="form-group relative">
+        <label for="beneficiarySearch">Rechercher un bénéficiaire :</label>
+        <input
+          id="beneficiarySearch"
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+          (focus)="showSuggestions = true"
+          (blur)="hideSuggestions()"
+          class="form-control"
+          placeholder="Nom ou numéro du bénéficiaire"
+        />
+
+        <ul
+          *ngIf="showSuggestions && filteredBeneficiaries.length > 0"
+          class="suggestions"
+          (mousedown)="$event.preventDefault()"
+        >
+          <li *ngFor="let b of filteredBeneficiaries" (click)="selectBeneficiary(b)">
+            <strong>{{ b.name }}</strong
+            ><br />
+            <small>{{ b.phoneNumber }}</small>
+          </li>
+        </ul>
+
+        <div *ngIf="showSuggestions && filteredBeneficiaries.length === 0" class="no-results">
+          Aucun bénéficiaire trouvé
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-secondary" (click)="closeModal()">Annuler</button>
       <button
         class="btn-primary"
-        [disabled]="!beneficiaireSelectionne"
+        [disabled]="!selectedBeneficiary"
         (click)="confirmerAttribution()"
       >
         Confirmer l'attribution et Livrer
       </button>
+      <button class="btn-secondary" (click)="closeModal()">Annuler</button>
     </div>
   </div>
 </div>
-}
-
-@if (isDeclineModalOpen) {
+} @if (isDeclineModalOpen) {
 <div class="modal-overlay">
   <div class="modal-content small-modal">
     <div class="modal-header">
@@ -269,20 +311,13 @@
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" (click)="closeModal()">Retour</button>
-      <button
-        class="btn-danger"
-        [disabled]="!raisonDeclin"
-        (click)="confirmerDeclin()"
-      >
+      <button class="btn-danger" [disabled]="!raisonDeclin" (click)="confirmerDeclin()">
         Décliner (Annuler)
       </button>
     </div>
   </div>
 </div>
-}
-
-
-@if (isPublishModalOpen) {
+} @if (isPublishModalOpen) {
 <div class="modal-overlay">
   <div class="modal-content small-modal">
     <div class="modal-header">
@@ -294,9 +329,23 @@
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" (click)="closeModal()">Annuler</button>
-      <button class="btn-primary" (click)="confirmerPublication()">
-        Oui, Publier
-      </button>
+      <button class="btn-primary" (click)="confirmerPublication()">Oui, Publier</button>
+    </div>
+  </div>
+</div>
+} @if (isDetailModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Detail sur la demande de don #{{ don.title }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>{{ detail.message }}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="approuver(detail)">Valider</button>
+      <button class="btn-secondary" (click)="closeModal()">Annuler</button>
     </div>
   </div>
 </div>

@@ -51,7 +51,7 @@
           <button (click)="openViewModal(org)">
             <img src="edite/voir.svg" alt="" srcset="" />
           </button>
-          <button (click)="openEditModal(org)">
+          <button [routerLink]="['/organisations/edite',org.id]">
             <img src="edite/editer.svg" alt="" srcset="" />
           </button>
           <button (click)="openDeleteModal(org)">
@@ -122,7 +122,7 @@
       Voulez-vous vraiment supprimer <strong>{{ selectedOrganisation?.nom }}</strong> ?
     </p>
     <div class="modal-actions">
-      <button (click)="confirmDelete()">Oui, supprimer</button>
+      <button (click)="confirmDelete(selectedOrganisation?.id!)">Oui, supprimer</button>
       <button (click)="closeModals()">Annuler</button>
     </div>
   </div>

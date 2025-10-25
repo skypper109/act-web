@@ -42,7 +42,7 @@ export const routes: Routes = [
           {path:'',component:OrgAccueil},
           {path:'create',component:OrgCreate},
           {path:'edite/:id',component:OrgCreate},
-        ],data: { titre: 'Gestion des organisations' }
+        ],data: { titre: 'Gestion d\'Ong' }
       },
 
       // Les routes pour la page des notifications
@@ -56,8 +56,9 @@ export const routes: Routes = [
       {path:'donations',component:DonIndex,children:[
 
           {path:'',component:DonAccueil},
-          {path:'detail',component: DonDetail},
+          {path:'detail/:id',component: DonDetail},
 
+          {path:'**',component:DonAccueil},
         ],data: { titre: 'Gestion des donations' }
       },
 

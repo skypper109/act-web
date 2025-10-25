@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Notification } from '../../../models/notification';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../../../services/notification-service';
+import { Data } from '../../../services/data';
+import { Env } from '../../../env';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-notif-accueil',
@@ -11,90 +16,126 @@ import { FormsModule } from '@angular/forms';
 })
 export class NotifAccueilComponent implements OnInit {
 
-  // La liste complète des notifications (source de vérité)
-  notifications: Notification[] = [
 
-    {
-      id: 1,
-      type: 'fonctionnalite',
-      titre: 'Nouvelle fonctionnalité disponible',
-      description: 'La fonctionnalité de suivi des dons est maintenant disponible.',
-      destinataires: 'Ong',
-      date: '2023-08-12 14:30',
-      luPar: 87,
-      totalDestinataires: 150,
-    },
-    {
-      id: 2,
-      type: 'maintenance',
-      titre: 'Maintenance prévue',
-      description: 'Une maintenance est prévue ce soir à 22h. L\'application sera indisponible pendant 2 heures.',
-      destinataires: 'Tous',
-      date: '2023-08-10 09:15',
-      luPar: 132,
-      totalDestinataires: 150,
-    },
-    {
-      id: 3,
-      type: 'campagne',
-      titre: 'Nouvelle campagne de dons',
-      description: 'Une nouvelle campagne de dons de matériel médical démarre aujourd\'hui.',
-      destinataires: 'Associations',
-      date: '2023-08-08 11:20',
-      luPar: 38,
-      totalDestinataires: 42,
-    },
-    {
-      id: 4,
-      type: 'validation',
-      titre: 'Validation des activités',
-      description: 'N\'oubliez pas de valider vos activités bénévoles de la semaine.',
-      destinataires: 'Benevoles',
-      date: '2023-08-05 16:45',
-      luPar: 72,
-      totalDestinataires: 95,
-    },
-    {
-      id: 5,
-      type: 'probleme',
-      titre: 'Problème technique résolu',
-      description: 'Le problème de connexion a été résolu. Merci de votre patience.',
-      destinataires: 'Tous',
-      date: '2023-08-03 08:30',
-      luPar: 150, // Supposons que tout le monde l'a lu
-      totalDestinataires: 150,
-    },
-    ];
+  notifications: Notification[] = [];
+  newNotif: Notification = new Notification();
+  // selectedNotification?: Notification;
+
+  constructor(
+    private data: Data,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    this.spinner.show();
+    this.data.getData(Env.NOTIFICATION).subscribe(
+      (res:any)=>{
+        this.notifications = res;
+        this.filterNotifications();
+        console.log(res);
+        this.spinner.hide();
+      },
+      error => {
+        this.spinner.hide();
+        this.toastr.error("Erreur lors du chargement des notifications.", "Erreur");
+      }
+    );
+  }
+  loading = false;
+
+  saveNew() {
+    if (!this.newNotif) return;
+    this.loading = true;
+    
+    this.spinner.show();
+    this.data.postData(Env.NOTIFICATION, this.newNotif).subscribe(
+      res => {
+        this.spinner.hide();
+        this.toastr.success("Notification créée avec succès.", "Succès");
+        this.notifications.push(this.newNotif);
+        this.newNotif = new Notification();
+        this.loadNotifications();
+        this.closeModals();
+      },
+      error => {
+        this.spinner.hide();
+        this.toastr.error("Erreur lors de la création.Veillez bien renseigner les champs.", "Erreur");
+      }
+    );
+  }
+
+  confirmDelete() {
+    if (!this.selectedNotification) return;
+
+    this.spinner.show();
+    this.data.deleteData(Env.NOTIFICATION, this.selectedNotification.id!).subscribe(
+      res => {
+        this.spinner.hide();
+        this.toastr.success("Notification supprimée.", "Succès");
+        this.notifications = this.notifications.filter(n => n.id !== this.selectedNotification!.id);
+        this.selectedNotification = null;
+        this.loadNotifications();
+        this.closeModals();
+      },
+      error => {
+        this.spinner.hide();
+        this.toastr.error("Erreur lors de la suppression.", "Erreur");
+        this.closeModals();
+      }
+    );
+  }
+
+
 
   // La liste des notifications actuellement affichées
   filteredNotifications: Notification[] = [];
 
   // Le filtre sélectionné par l'utilisateur
-   selectedFilter: string = 'Tous les destinataires';
+   selectedFilter: string = 'Tous';
     createNotification: Notification | null = null;
     showCreateModal: boolean= false;
     selectedNotification: Notification | null = null;
     showDeleteModal: boolean = false;
-    newNotif: Notification | null = null;
+    // newNotif: Notification = {
+    //   type: '',
+    //   titre: '',
+    //   contenu: '',
+    //   destinataires: '',
+    //   dateCreation: new Date(Date.now()),
+    // };
 
-  constructor() { }
+  // notifications: Notification[] = [];
+  unreadCount = 0;
 
-  ngOnInit(): void {
-    // Initialise la liste affichée avec toutes les notifications au chargement
-    this.filterNotifications();
-  }
+  // constructor(private data:Data) {}
+
+  // ngOnInit(): void {
+  //   this.data.getData(Env.NOTIFICATION).subscribe(
+  //     (res:any)=>{
+  //       this.notifications = res;
+  //       this.filterNotifications();
+  //       console.log(res);
+  //     },
+  //     (error)=>{
+  //       console.log(error);
+  //     }
+  //   )
+  // }
+
 // --- LOGIQUE DE FILTRAGE OPTIMISÉE ---
   filterNotifications(): void {
     let filter = this.selectedFilter;
     let notificationsToFilter = this.notifications; // Utilisez la liste source
 
     // Cas 1 : Aucune filtration (Tous les destinataires)
-    if (filter === 'Tous les destinataires') {
+    if (filter === 'Tous') {
       this.filteredNotifications = [...notificationsToFilter];
     }
-    // Cas 2 : Filtration par destinataire (Ong, Benevoles, Associations)
-    // Note: Assurez-vous que les valeurs de 'this.selectedFilter' (ex: 'Associations')
-    // correspondent exactement aux valeurs de 'notif.destinataires'.
     else {
       this.filteredNotifications = notificationsToFilter.filter(notif => {
         return notif.destinataires === filter;
@@ -110,17 +151,29 @@ export class NotifAccueilComponent implements OnInit {
     console.log("Action: Ouvrir le formulaire de nouvelle notification");
     this.showCreateModal = true;
     this.newNotif = {
-      id: this.notifications.length + 1,
       type: '',
       titre: '',
-      description: '',
+      contenu: '',
       destinataires: '',
-      date: new Date().toISOString().slice(0, 16).replace('T', ' '), // Format "YYYY-MM-DD HH:mm"
-      luPar: 0,
-      totalDestinataires: 0,
+      dateCreation: new Date(Date.now()),
     };
 
   }
+
+    // saveNew() {
+    //   if (this.newNotif) {
+    //     this.data.postData(Env.NOTIFICATION,this.newNotif).subscribe(
+    //       (res)=>{
+    //         console.log(res);
+    //       },
+    //       (error)=>{
+    //         console.log(error);
+    //       }
+    //     )
+    //     this.filterNotifications();
+    //     this.closeModals();
+    //   }
+    // }
 
   renvoyer(notificationId: number): void {
     console.log(`Action: Renvoyer la notification #${notificationId}`);
@@ -162,23 +215,29 @@ export class NotifAccueilComponent implements OnInit {
     closeModals() {
       this.showCreateModal = false;
       this.showDeleteModal = false;
-      this.newNotif = null;
+      this.newNotif ={
+        type: '',
+        titre: '',
+        contenu: '',
+        destinataires: '',
+        dateCreation: new Date(Date.now()),
+      };
     }
 
-    saveNew() {
-      if (this.newNotif) {
-        this.notifications = [...this.notifications, this.newNotif];
-        this.filterNotifications();
-        this.closeModals();
-      }
-    }
-
-    confirmDelete() {
-      if (this.selectedNotification) {
-        this.notifications = this.notifications.filter(a => a.id !== this.selectedNotification!.id);
-        this.filterNotifications();
-        this.closeModals();
-      }
-    }
+    // confirmDelete() {
+    //   if (this.selectedNotification) {
+    //     this.data.deleteData(Env.NOTIFICATION,this.selectedNotification.id!).subscribe(
+    //       (res)=>{
+    //         console.log(res);
+    //         this.notifications = this.notifications.filter(a => a.id !== this.selectedNotification!.id);
+    //         this.filterNotifications();
+    //         this.closeModals();
+    //       },
+    //       (error)=>{
+    //         console.log(error);
+    //       }
+    //     )
+    //   }
+    // }
 
 }

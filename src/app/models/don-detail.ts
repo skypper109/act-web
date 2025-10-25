@@ -1,13 +1,18 @@
 export class DonDetailDto {
   id!: number;
-  titre!: string;
-  etat!: 'Neuf' | 'Occasion' | 'Reconditionné';
-  statut!: 'En-attente' | 'Publie' | 'Decline' | 'Attribue' | 'Livre';
-  localisation!: string;
-  type!: string;
-  quantite!: number;
+  title!: string;
+  etat!: 'Neuf' | 'Occasion' | 'Reconditionne';
+  isAvailable?: 'EN_ATTENTE' | 'PUBLIE' | 'DECLINE' | 'ATTRIBUE' | 'LIVRE';
+  location!: string;
+  typeDon!: string;
+  quantity!: number;
   descriptionCourte!: string;
   descriptionComplete!: string;
   caracteristiques!: string[];
-  images!: string[];
+  imageUrls!: string[];
+  category?:'AUTRES' | 'EQUIPMENT';
+  raisonDeclin?:string;
+  createdAt?:Date = new Date(Date.now());
+  donorName?:string;
+  donorId!:number;
 }

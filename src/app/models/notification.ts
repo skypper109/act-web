@@ -1,10 +1,12 @@
 export class Notification {
-  id!: number;
+  id?: number;
   type!: string;
   titre!: string;
-  description!: string;
+  contenu!: string;
   destinataires!: string;
-  date!: string;
-  luPar!: number;
-  totalDestinataires!: number;
+  dateCreation!: Date;
+  read?:boolean;
+  luPar?: number;
+  etat?:string;
+  totalDestinataires?: number;
 }

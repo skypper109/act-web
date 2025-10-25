@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Organisation } from '../../../models/organisation';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Data } from '../../../services/data';
 import { Env } from '../../../env';
 
@@ -15,29 +15,34 @@ import { Env } from '../../../env';
 export class OrgCreate implements OnInit {
 
   fichier!:File;
-  nouvelleOrganisation: Organisation = {
-    id: 0,
-    nom: '',
-    typeOrganisation: '',
-    descriptionMission: '',
-    logoFile: null,
-    emailContact: '',
-    telephoneContact: '',
-    siteWeb: '',
-    adresse: '',
-    ville: '',
-    codePostal: '',
-    pays: 'Mali',
-    nomCompletRepresentant: '',
-    fonctionRepresentant: '',
-    emailRepresentant: '',
-    telephoneRepresentant: '',
-    numeroEnregistrement: '',
-    dateCreation: new Date(Date.now()),
-    statut: 'Approuver',
-    confirmationOfficielle: false,
-    estActif: false
-  };
+  // nouvelleOrganisation: Organisation = {
+  //   id: 0,
+  //   nom: '',
+  //   typeOrganisation: '',
+  //   descriptionMission: '',
+  //   logoFile: null,
+  //   emailContact: '',
+  //   telephoneContact: '',
+  //   siteWeb: '',
+  //   adresse: '',
+  //   ville: '',
+  //   codePostal: '',
+  //   pays: 'Mali',
+  //   nomCompletRepresentant: '',
+  //   fonctionRepresentant: '',
+  //   emailRepresentant: '',
+  //   telephoneRepresentant: '',
+  //   numeroEnregistrement: '',
+  //   dateCreation: new Date(Date.now()),
+  //   statut: 'Approuver',
+  //   confirmationOfficielle: false,
+  //   estActif: false
+  // };
+
+  nouvelleOrganisation: Organisation = {} as Organisation;
+  isEditMode: boolean = false;
+
+  assoID!:number;
 
   public currentStep = 1;
   public orgTypes = ['Humanitaire', 'Santé', 'Éducation', 'Environnement', 'Autre'];
@@ -45,16 +50,31 @@ export class OrgCreate implements OnInit {
 
   constructor(
     private organisationService: Data,
-    private router: Router
-  ) {}
+    private data:Data,private router:Router,private route:ActivatedRoute) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Vérifier si un ID est présent dans l'URL pour l'édition
+    this.assoID = this.route.snapshot.params['id'];
+    if (this.assoID) {
+      // Charger les données de l'association existante pour l'édition
+      this.isEditMode = true;
+      this.data.getDataById(Env.ORGANISATION, this.assoID).subscribe(
+        (res: any) => {
+          this.nouvelleOrganisation = res;
+          console.log(this.nouvelleOrganisation);
+        },
+        (error) => {
+          console.error('Erreur lors du chargement des données de l\'Ong :', error);
+        }
+      );
+    }
+  }
 
   onFileChange(event: any): void {
     const fileList: FileList | null = event.target.files;
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
-      if (file.size > 20 * 1024 * 1024) { 
+      if (file.size > 20 * 1024 * 1024) {
         alert("Le fichier dépasse la taille maximale autorisée (20 Mo).");
         return;
       }
@@ -71,6 +91,19 @@ export class OrgCreate implements OnInit {
     }
 
     this.isSubmitting = true;
+    if (this.isEditMode) {
+        // Mode édition
+        this.data.putDataWithFile(Env.ORGANISATION, this.assoID, this.nouvelleOrganisation,this.fichier).subscribe(
+          (res) => {
+            console.log('Organisation mise à jour avec succès :', res);
+            this.router.navigate(['/organisations']);
+          },
+          (error) => {
+            console.error('Erreur lors de la mise à jour de l\'Organisation :', error);
+          }
+        );
+        return;
+      }
 
     this.organisationService.postDataWithFile(Env.ORGANISATION,this.nouvelleOrganisation,this.fichier).subscribe({
       next: (response) => {

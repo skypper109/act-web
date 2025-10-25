@@ -165,7 +165,11 @@
     <div class="form-footer">
       <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
       <button type="submit" class="btn-primary" [disabled]="orgForm.invalid">
+        @if(isEditMode){
+        Enregistrer les modifications
+        } @else {
         Enregistrer
+        }
       </button>
     </div>
   </form>
