@@ -85,33 +85,40 @@
 @if (showViewModal) {
 <div class="modal">
   <div class="modal-content vue">
-    <div class="content">
-      <div class="btn">
-        <button  style="position: absolute;top: 0; right: 0; background-color: rgb(205, 30, 45);color: white;" (click)="closeModals()">&times; fermer</button>
-      </div>
+
+    <!-- Bannière couverture -->
+    <div class="modal-banner" *ngIf="selectedOrganisation?.logoCouverture">
+      <img [src]="imageUrl || 'assets/images/default-banner.png'" alt="Couverture de {{ selectedOrganisation?.nom }}" />
+    </div>
+
+    <!-- Header fixe -->
+    <div class="modal-header">
       <div class="icon">
-        <img src="edite/organisation.svg" alt="" srcset="" />
+        <img [src]="imageUrl" alt="Logo de {{ selectedOrganisation?.nom }}" />
       </div>
-      <div class="name-status">
+      <div class="header-info">
         <h3>{{ selectedOrganisation?.nom }}</h3>
         <span class="status" [ngClass]="selectedOrganisation?.statut">{{ selectedOrganisation?.statut }}</span>
-        <p>{{ selectedOrganisation?.descriptionMission || 'N/A' }}</p>
       </div>
+      <button class="close-btn" (click)="closeModals()">&times;</button>
+    </div>
 
+    <!-- Body scrollable -->
+    <div class="modal-body">
+      <p>{{ selectedOrganisation?.descriptionMission || 'Aucune description fournie.' }}</p>
       <div class="info">
-        <p><strong>Type :</strong> {{ selectedOrganisation?.typeOrganisation }}</p>
+        <p><strong>Type :</strong> {{ selectedOrganisation?.typeOrganisation || 'N/A' }}</p>
         <p><strong>Email :</strong> {{ selectedOrganisation?.emailRepresentant }}</p>
         <p><strong>Téléphone :</strong> {{ selectedOrganisation?.telephoneRepresentant }}</p>
         <p><strong>Adresse :</strong> {{ selectedOrganisation?.adresse || 'N/A' }}</p>
-        <!-- <p><strong>Description :</strong> </p> -->
-        <p><strong>Date de création :</strong> {{ selectedOrganisation?.dateCreation }}</p>
+        <p><strong>Date de création :</strong> {{ selectedOrganisation?.dateCreation | date:'dd/MM/yyyy' }}</p>
       </div>
-
     </div>
-    <!-- <button (click)="closeModals()">Fermer</button> -->
+
   </div>
 </div>
 }
+
 
 <!-- ========== MODALE SUPPRESSION ========== -->
 @if (showDeleteModal) {

@@ -17,8 +17,30 @@
         <option value="LIVRE">Livré</option>
         <option value="DECLINE">Decliné</option>
       </select>
-      <button class="btn-filter">Filtrer</button>
-      <button class="btn-primary" (click)="createDon()">+ Faire un Don</button>
+      <button class="btn-filter" (click)="filter()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="4" y1="21" x2="4" y2></line>
+          <line x1="4" y1="12" x2="4" y2></line>
+          <line x1="4" y1="3" x2="4" y2></line>
+          <line x1="12" y1="21" x2="12" y2></line>
+          <line x1="12" y1="12" x2="12" y2></line>
+          <line x1="12" y1="3" x2="12" y2></line>
+          <line x1="20" y1="21" x2="20" y2></line>
+          <line x1="20" y1="12" x2="20" y2></line>
+          <line x1="20" y1="3" x2="20" y2></line>
+        </svg>
+        Filtrer
+      </button>
     </div>
   </div>
 
@@ -37,7 +59,7 @@
       <tr *ngFor="let don of paginatedDons">
         <td class="tdTitre">{{ don.title }}</td>
         <td>{{ don.typeDon }}</td>
-        <td>{{ don.donorId }}</td>
+        <td>{{ don.donorName }}</td>
         <td>{{ don.donorName }}</td>
         <td>
           <span class="status" [ngClass]="don.isAvailable">

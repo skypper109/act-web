@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-role',
+  selector: 'app-not-found',
   imports: [],
-  templateUrl: './role.html',
-  styleUrl: './role.css'
+  templateUrl: './not-found.html',
+  styleUrl: './not-found.css'
 })
-export class Role {
+export class NotFound {
 
   constructor(private router: Router) {}
 
@@ -15,7 +15,7 @@ export class Role {
     this.router.navigate(['/']);
   }
 
-  contact() {
-    alert('Contactez-nous à support@votreapp.com');
+  report() {
+    alert('Merci de signaler cette erreur à l’administrateur.');
   }
 }

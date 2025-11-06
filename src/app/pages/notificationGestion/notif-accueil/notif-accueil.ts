@@ -51,7 +51,7 @@ export class NotifAccueilComponent implements OnInit {
   saveNew() {
     if (!this.newNotif) return;
     this.loading = true;
-    
+
     this.spinner.show();
     this.data.postData(Env.NOTIFICATION, this.newNotif).subscribe(
       res => {
@@ -144,6 +144,7 @@ export class NotifAccueilComponent implements OnInit {
 
     // Affiche le résultat après le filtre
     console.log(this.filteredNotifications);
+    this.filteredNotifications.reverse();
   }
 
   // --- LOGIQUE D'ACTIONS ---
@@ -240,4 +241,7 @@ export class NotifAccueilComponent implements OnInit {
     //   }
     // }
 
+    filter(){
+      this.filteredNotifications = this.notifications.reverse()
+    }
 }

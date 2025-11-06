@@ -2,7 +2,7 @@ export class DonDetailDto {
   id!: number;
   title!: string;
   etat!: 'Neuf' | 'Occasion' | 'Reconditionne';
-  isAvailable?: 'EN_ATTENTE' | 'PUBLIE' | 'DECLINE' | 'ATTRIBUE' | 'LIVRE';
+  isAvailable!: 'EN_ATTENTE' | 'PUBLIE' | 'DECLINE' | 'ATTRIBUE' | 'LIVRE';
   location!: string;
   typeDon!: string;
   quantity!: number;

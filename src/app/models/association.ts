@@ -1,4 +1,5 @@
 export class Association {
+[x: string]: any;
   id?: number;
   name!: string;
   categorie?: string;
@@ -10,7 +11,8 @@ export class Association {
   description?: string;
   active?: boolean;
   typeAssociation?:string;
-  logoUrl!:string ;
+  logoFile!: File | null;
+  logoCouverture!: File | null;
   siteWeb!: string;
   ville!: string;
   codePostal!: string;

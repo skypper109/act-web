@@ -8,8 +8,8 @@ import { DonDetailDto } from '../models/don-detail';
 })
 export class DonService {
 
-
   constructor(private http: HttpClient) {}
+  
   creerDon(nb:number) {
     return this.http.post(Env.DONATION, DONS_MOCK[nb]);
   }
@@ -38,6 +38,7 @@ export class DonService {
   notifyDonation(id: number) {
     return this.http.post(`${Env.DONATION}${id}/notify`, {});
   }
+
 }
 
 
@@ -327,5 +328,54 @@ export const DONATION_REQUESTS_MOCK: DonationRequestDTO[] = [
     createdAt: '2025-10-24T20:00:00Z',
     donationId: 10,
     requesterId: 2,
+  },
+];
+
+
+
+export interface SocialAction {
+  id?: number;
+  titre: string;
+  lieu: string;
+  description: string;
+  imageIds?: number[];
+  passed: boolean;
+  date: Date;
+  type: string;
+  benevolNumber: number;
+  participationIds?: number[];
+}
+
+
+export const MOCK_SOCIAL_ACTIONS: SocialAction[] = [
+  {
+     titre: 'Sensibilisation au paludisme', lieu: 'Gao', description: 'Campagne contre le paludisme.', imageIds: [], passed: true, date: new Date('2025-04-05'), type: 'Santé', benevolNumber: 33, participationIds: []
+  },
+  {
+     titre: 'Formation en recyclage', lieu: 'Sikasso', description: 'Atelier sur la transformation des déchets.', imageIds: [], passed: true, date: new Date('2025-05-11'), type: 'Environnement', benevolNumber: 27, participationIds: [],
+  },
+  {
+     titre: 'Aide aux déplacés', lieu: 'Tombouctou', description: 'Distribution de vivres et d’eau potable.', imageIds: [], passed: false, date: new Date('2025-06-19'), type: 'Social', benevolNumber: 80, participationIds: [],
+  },
+  {
+     titre: 'Journée sportive inter-écoles', lieu: 'Bamako', description: 'Promotion de l’unité et du sport.', imageIds: [], passed: true, date: new Date('2025-07-25'), type: 'Éducation', benevolNumber: 60, participationIds: [],
+  },
+  {
+     titre: 'Don de vêtements', lieu: 'Ségou', description: 'Distribution de vêtements aux familles démunies.', imageIds: [], passed: true, date: new Date('2025-08-14'), type: 'Social', benevolNumber: 22, participationIds: [],
+  },
+  {
+     titre: 'Atelier sur l’eau potable', lieu: 'Kayes', description: 'Éducation sur l’hygiène et l’eau propre.', imageIds: [], passed: true, date: new Date('2025-09-22'), type: 'Santé', benevolNumber: 38, participationIds: [],
+  },
+  {
+     titre: 'Recyclage des plastiques', lieu: 'Bamako', description: 'Nettoyage urbain et tri des déchets.', imageIds: [], passed: false, date: new Date('2025-10-01'), type: 'Environnement', benevolNumber: 25, participationIds: [],
+  },
+  {
+     titre: 'Soutien psychologique aux victimes', lieu: 'Gao', description: 'Accompagnement psychologique communautaire.', imageIds: [], passed: true, date: new Date('2025-03-10'), type: 'Social', benevolNumber: 18, participationIds: [],
+  },
+  {
+     titre: 'Séminaire d’entrepreneuriat', lieu: 'Bamako', description: 'Formation et networking pour jeunes.', imageIds: [], passed: false, date: new Date('2025-02-18'), type: 'Autonomisation', benevolNumber: 45, participationIds: [],
+  },
+  {
+     titre: 'Forum de la jeunesse', lieu: 'Mopti', description: 'Rencontre pour le développement local.', imageIds: [], passed: true, date: new Date('2025-01-30'), type: 'Autonomisation', benevolNumber: 70, participationIds: [],
   },
 ];

@@ -19,30 +19,33 @@
       </a>
       <p>Gérez les dons effectués sur la plateforme</p>
     </div>
-    <button class="notifier-btn" (click)="notifier()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-      </svg>
-      Notifier
-    </button>
+
+    @if (don.isAvailable === "EN_ATTENTE") {
+      <button class="notifier-btn" (click)="openNotifyModal(don.id)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        Notifier
+      </button>
+    }
   </header>
 
   <div class="content-wrapper">
     <div class="main-info-section">
       <div class="image-carousel">
         <div class="image-wrapper">
-          <img [src]="don.imageUrls[currentImageIndex]" [alt]="don.title" class="main-image" />
+          <img  [src]="imageUrl+don.imageUrls[currentImageIndex]" [alt]="don.title" class="main-image" />
           <span class="statut-badge" [ngClass]="don.isAvailable">{{ don.isAvailable }}</span>
         </div>
 
@@ -160,19 +163,26 @@
                 <button class="btn-primary" (click)="attribuerEtLivrer(don.id)">
                   Attribuer et Livrer
                 </button>
-                <button class="btn-secondary" (click)="declinerDon(don.id)">
-                  Revoquer la publication
-                </button>
+                @if (demandaires.length === 0) {
+                  <button class="btn-secondary" (click)="openRevoqueModal(don.id)">
+                    Revoquer la publication
+                  </button>
+                }
               </ng-container>
               } @else if(don.isAvailable !== 'LIVRE' && don.isAvailable !== 'DECLINE' ) {
               <ng-container>
-                <button class="btn-primary" (click)="publier(don.id)">Publier</button>
-                <button class="btn-secondary" (click)="declinerDon(don.id)">Décliner</button>
+                <button class="btn-primary" (click)="openPublishModal(don.id)">Publier</button>
+                <button class="btn-secondary" (click)="openDeclineModal(don.id)">Décliner</button>
               </ng-container>
               }@else {
-                <button class="btn-edit" (click)="modifierAttribution(don.id)" [disabled]="true">
+                <button class="btn-edit" (click)="openAttribuerModal(don.id)" [disabled]="true">
                   Modifier l'attribution
                 </button>
+                @if (demandaires.length === 0) {
+                  <button class="btn-secondary" (click)="openRevoqueModal(don.id)">
+                    Revoquer la publication
+                  </button>
+                }
               }
             </div>
           </div>
@@ -193,14 +203,19 @@
                 >{{ p.name }}
                 <sup
                   *ngIf="p.status == 'APPROVED'"
-                  style="background-color: green; color: aliceblue"
+                  style="background-color: green; color: aliceblue;padding: 3px;"
                   >Accepter</sup
+                >
+                <sup
+                  *ngIf="p.status == 'REJECTED'"
+                  style="background-color: red; color: aliceblue;padding: 3px;"
+                  >Rejeter</sup
                 >
               </strong>
               <p>{{ p.type }}</p>
             </div>
 
-            @if (don.isAvailable == 'PUBLIE') {
+            @if (p.status != "REJECTED" && don.isAvailable == "PUBLIE") {
             <div class="actions">
               <button class="approve" (click)="approuver(p)">
                 <img src="edite/actif.svg" alt="" srcset="" />
@@ -214,7 +229,8 @@
             </div>
             }
           </div>
-          } }
+          }
+        }
         </div>
         }
       </div>
@@ -291,7 +307,8 @@
     </div>
   </div>
 </div>
-} @if (isDeclineModalOpen) {
+}
+@if (isDeclineModalOpen) {
 <div class="modal-overlay">
   <div class="modal-content small-modal">
     <div class="modal-header">
@@ -317,7 +334,35 @@
     </div>
   </div>
 </div>
-} @if (isPublishModalOpen) {
+}
+@if (isRevoqueModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content small-modal">
+    <div class="modal-header">
+      <h2>Revoquer (mettre en Attent) le Don #{{ currentDonId }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Veuillez fournir la raison pour laquelle ce don doit être revoquer.</p>
+
+      <label for="raison">Raison :</label>
+      <textarea
+        id="raison"
+        rows="4"
+        placeholder="Ex: Objet non conforme, Donateur injoignable, etc."
+        [(ngModel)]="raisonDeclin"
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Retour</button>
+      <button class="btn-danger" [disabled]="!raisonDeclin" (click)="confirmerRevoque()">
+        Revoquer (mettre en Attente)
+      </button>
+    </div>
+  </div>
+</div>
+}
+@if (isPublishModalOpen) {
 <div class="modal-overlay">
   <div class="modal-content small-modal">
     <div class="modal-header">
@@ -333,7 +378,8 @@
     </div>
   </div>
 </div>
-} @if (isDetailModalOpen) {
+}
+@if (isDetailModalOpen) {
 <div class="modal-overlay">
   <div class="modal-content">
     <div class="modal-header">
@@ -346,6 +392,33 @@
     <div class="modal-footer">
       <button class="btn-primary" (click)="approuver(detail)">Valider</button>
       <button class="btn-secondary" (click)="closeModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+}
+@if (isNotifyModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content small-modal">
+    <div class="modal-header">
+      <h2>Envoyer un message au proprietaire du Don #{{ currentDonId }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Veuillez saisir le message que vous voulez envoyer.</p>
+
+      <label for="raison">Message :</label>
+      <textarea
+        id="raison"
+        rows="4"
+        placeholder="Venez au plus vite avec les materiels sinon vous serez suspendu."
+        [(ngModel)]="message"
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Retour</button>
+      <button class="btn-edit" [disabled]="!message" (click)="confirmerEnvoie()">
+        Envoyer
+      </button>
     </div>
   </div>
 </div>

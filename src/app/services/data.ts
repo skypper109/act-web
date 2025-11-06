@@ -55,6 +55,14 @@ export class Data {
     return this.http.post(`${url}`, formData);
   }
 
+  post(url:string){
+    return this.http.post(`${url}`,null,{ headers: this.header });
+  }
+
+  put(url:string){
+    return this.http.put(`${url}`, { headers: this.header });
+  }
+
   putData(url: string, id?: number, body?: any,attribut?:any) {
     const formData = new FormData();
     formData.append(attribut, new Blob([JSON.stringify(body)], {

@@ -16,16 +16,6 @@ import { DonDetailDto } from '../../../models/don-detail';
   styleUrl: './asso-accueil.css'
 })
 export class AssoAccueil implements OnInit {
-
-
-
-
-
-
-
-
-  //nouveau
-
   associations: Association[] = [];
   filteredAssociations: Association[] = [];
   searchTerm = '';
@@ -37,6 +27,9 @@ export class AssoAccueil implements OnInit {
   showEditModal = false;
   showDeleteModal = false;
   selectedAssociation?: Association;
+
+  imageUrl : string | undefined;
+  covertUrl : string | undefined;
 
   constructor(
     private data: Data,
@@ -56,6 +49,7 @@ export class AssoAccueil implements OnInit {
         this.associations = res?.data ?? [];
         this.applyFilters();
         this.spinner.hide();
+        console.log(this.associations);
       },
       (error: any) => {
         this.spinner.hide();
@@ -141,7 +135,7 @@ export class AssoAccueil implements OnInit {
     const timePart = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     return `${datePart}`;
   }
-  
+
   get paginatedAssociations(): Association[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredAssociations.slice(start, start + this.itemsPerPage);
@@ -156,6 +150,10 @@ export class AssoAccueil implements OnInit {
    // ---------- MODALES ----------
   openViewModal(asso: Association) {
     this.selectedAssociation = asso;
+
+    this.imageUrl = Env.IMAGE_URL + this.selectedAssociation['logoUrl'];
+    this.covertUrl = Env.IMAGE_URL + this.selectedAssociation['covertUrl'];
+
     this.showViewModal = true;
   }
 

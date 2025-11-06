@@ -3,7 +3,7 @@ import { Don } from '../../../models/don';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DONATION_REQUESTS_MOCK, DONS_MOCK, DonService } from '../../../services/don-service';
+import { DONATION_REQUESTS_MOCK, DONS_MOCK, DonService, MOCK_SOCIAL_ACTIONS } from '../../../services/don-service';
 import { Data } from '../../../services/data';
 import { DonIndex } from '../don-index/don-index';
 import { error } from 'console';
@@ -34,29 +34,30 @@ export class DonAccueil implements OnInit {
   itemsPerPage = 5;
 
   constructor(private route:Router,private data:Data,
-      private toastr: ToastrService,
-      private spinner: NgxSpinnerService
-    ) {}
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
+  ) {}
 
-    ngOnInit(): void {
-      this.loadAssociations();
-    }
+  ngOnInit(): void {
+    this.loadDons();
+  }
 
-    loadAssociations() {
-      this.spinner.show();
-      this.data.getData(Env.DONATION).subscribe(
-        (res: any) => {
-          this.dons = res?.data ?? [];
-          this.applyFilters();
-          this.spinner.hide();
-        },
-        (error: any) => {
-          this.spinner.hide();
-          this.toastr.error("Impossible de charger la liste des Dons.", "Erreur");
-          console.error(error);
-        }
-      );
-    }
+  loadDons() {
+    this.spinner.show();
+    this.data.getData(Env.DONATION).subscribe(
+      (res: any) => {
+        this.dons = res?.data ?? [];
+        this.applyFilters();
+        this.spinner.hide();
+        console.log(this.dons)
+      },
+      (error: any) => {
+        this.spinner.hide();
+        this.toastr.error("Impossible de charger la liste des Dons.", "Erreur");
+        console.error(error);
+      }
+    );
+  }
   applyFilters(): void {
     this.filteredDons = this.dons.filter(d =>
       (this.filterStatut === 'Tous' || d.isAvailable === this.filterStatut) &&(
@@ -83,6 +84,11 @@ export class DonAccueil implements OnInit {
     this.route.navigate(['donations/detail',don.id]);
   }
 
+  filter(){
+    this.filteredDons = this.dons.reverse();
+    console.log(this.filteredDons);
+  }
+
   // createDon(){
 
   //   for (let i = 0; i < DONS_MOCK.length; i++) {
@@ -99,9 +105,9 @@ export class DonAccueil implements OnInit {
   // }
   createDon(){
 
-    for (let i = 0; i < DONS_MOCK.length; i++) {
-      const elem = DONATION_REQUESTS_MOCK[i];
-      this.data.postDataWithFile(Env.DEMANDE_DONATION,elem,undefined,"demandeDon").subscribe(
+    for (let i = 0; i < MOCK_SOCIAL_ACTIONS.length; i++) {
+      const elem = MOCK_SOCIAL_ACTIONS[i];
+      this.data.postDataWithFile(Env.URL_API+'action-socials',elem,undefined,"socialAction").subscribe(
         (rest)=>{
           console.log("response "+i+1+" : "+rest);
         },

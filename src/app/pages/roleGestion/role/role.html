@@ -1,1 +1,37 @@
-<p>role works!</p>
+<div class="construction-container">
+  <div class="construction-text">
+    <h1>Page en construction 🚧</h1>
+    <p>
+      Nous travaillons actuellement sur cette section pour vous offrir une meilleure expérience.
+      Revenez bientôt !
+    </p>
+
+    <div class="progress-bar">
+      <span></span>
+    </div>
+
+    <div class="construction-actions">
+      <button class="btn-primary" (click)="goHome()">Retour à l'accueil</button>
+      <!-- <button class="btn-outline" (click)="contact()">Nous contacter</button> -->
+    </div>
+  </div>
+
+  <div class="construction-illustration">
+    <svg class="machine" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="240" width="360" height="40" fill="#f3f6fa" />
+      <rect x="36" y="180" width="68" height="18" rx="6" fill="#f8fafc" stroke="#e6eef8" />
+      <rect x="60" y="120" width="10" height="60" rx="4" fill="#f3f7fb" stroke="#dae8f7" />
+
+      <g transform="translate(70,80)" class="crane-arm">
+        <rect x="0" y="0" width="170" height="10" rx="6" fill="#fff6f0" stroke="#ffe6d0" />
+        <rect x="150" y="-4" width="28" height="28" rx="6" fill="#ff6b6b" />
+      </g>
+
+      <g transform="translate(210,100)">
+        <rect x="0" y="24" width="110" height="60" rx="8" fill="#fff" stroke="#f0e6e6" />
+        <text x="14" y="56" font-size="12" fill="#444" font-weight="700">Bientôt</text>
+        <text x="14" y="74" font-size="11" fill="#697b8a">disponible</text>
+      </g>
+    </svg>
+  </div>
+</div>

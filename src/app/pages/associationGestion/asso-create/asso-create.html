@@ -31,19 +31,41 @@
         </div>
       </div>
 
-      <div class="row logo-upload">
-        <label>Logo</label>
-        <div class="logo-preview">
-          <div class="preview-box">
-            <span *ngIf="!nouvelleAssociation.logoUrl">Aucun logo</span>
-            <img *ngIf="nouvelleAssociation.logoUrl" [src]="fichier" alt="Logo preview"> </div>
-          <div class="file-input-wrapper">
-            <input type="file" id="logo" (change)="onFileChange($event)" accept="image/png, image/jpeg, image/gif" style="display: none;">
-            <button type="button" onclick="document.getElementById('logo').click()">Choisir un fichier</button>
-            <small>PNG, JPG ou GIF. Taille maximale de 2 Mo.</small>
+      <div  style="display: flex; flex-direction: row; padding: 10px;">
+
+        <div class="row logo-upload">
+          <label>Logo</label>
+          <div class="logo-preview">
+            <div class="preview-box">
+              <span *ngIf="!nouvelleAssociation.logoFile">Aucun logo</span>
+              <img *ngIf="logoPath" [src]="logoPath" alt="Logo preview">
+            </div>
+            <div class="file-input-wrapper">
+              <input type="file" id="logo" (change)="onFileChange($event,'logo')" accept="image/png, image/jpeg, image/gif" style="display: none;">
+              <button type="button" onclick="document.getElementById('logo').click()">Choisir un fichier</button>
+              <small>PNG, JPG ou GIF. Taille maximale de 2 Mo.</small>
+            </div>
           </div>
         </div>
+
+        <div class="row logo-upload">
+          <label>Couverture</label>
+          <div class="logo-preview">
+            <div class="preview-box">
+              <span *ngIf="!nouvelleAssociation.logoCouverture">Aucun cover</span>
+              <img *ngIf="coverPath" [src]="coverPath" alt="image cover">
+            </div>
+            <div class="file-input-wrapper">
+              <input type="file" id="cover" (change)="onFileChange($event,'couverture')" accept="image/png, image/jpeg, image/gif" style="display: none;">
+              <button type="button" onclick="document.getElementById('cover').click()">Choisir un fichier</button>
+              <small>PNG, JPG ou GIF. Taille maximale de 2 Mo.</small>
+            </div>
+          </div>
+        </div>
+
       </div>
+
+
     </div>
 
     <div class="form-section card-style">
@@ -159,7 +181,6 @@
     </div>
 
     <div class="form-footer">
-      <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
       <button type="submit" class="btn-primary" [disabled]="orgForm.invalid">
         @if(isEditMode){
         Enregistrer les modifications
@@ -167,6 +188,7 @@
         Enregistrer
         }
       </button>
+      <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
     </div>
   </form>
 </div>

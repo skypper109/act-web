@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Data } from '../../../services/data';
 import { Env } from '../../../env';
+import { readFile } from 'node:fs';
 
 @Component({
   selector: 'app-org-create',
@@ -39,7 +40,11 @@ export class OrgCreate implements OnInit {
   //   estActif: false
   // };
 
-  nouvelleOrganisation: Organisation = {} as Organisation;
+  nouvelleOrganisation: Organisation = {
+    typeOrganisation:'',
+    statut:"Approuver",
+    dateCreation:new Date(Date.now())
+  } as Organisation;
   isEditMode: boolean = false;
 
   assoID!:number;
@@ -70,17 +75,38 @@ export class OrgCreate implements OnInit {
     }
   }
 
-  onFileChange(event: any): void {
-    const fileList: FileList | null = event.target.files;
-    if (fileList && fileList.length > 0) {
-      const file = fileList[0];
+  logoPath:string | ArrayBuffer | null = null;
+
+  coverPath:string | ArrayBuffer | null = null;
+
+  onFileChange(event: Event,type:string): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
       if (file.size > 20 * 1024 * 1024) {
         alert("Le fichier dépasse la taille maximale autorisée (20 Mo).");
         return;
       }
-      this.nouvelleOrganisation.logoFile = fileList[0];
-      this.fichier = fileList[0];
-      console.log('Logo sélectionné :', this.nouvelleOrganisation.logoFile.name);
+      if (type === 'logo') {
+        this.nouvelleOrganisation.logoFile = input.files[0];
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = ()=>{
+          this.logoPath = reader.result;
+        }
+        console.log('Logo sélectionné :', this.nouvelleOrganisation.logoFile.name);
+      } else if (type === 'couverture') {
+        this.nouvelleOrganisation.logoCouverture = input.files[0];
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = ()=>{
+          this.coverPath = reader.result;
+        }
+
+        console.log('couverture sélectionnée :', this.nouvelleOrganisation.logoCouverture.name);
+      }
     }
   }
 

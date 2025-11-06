@@ -7,26 +7,44 @@ import { Data } from '../../../services/data';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Env } from '../../../env';
-import { id } from '@swimlane/ngx-charts';
-import { DONS_MOCK, DonService } from '../../../services/don-service';
+import { DonService } from '../../../services/don-service';
 
 @Component({
   selector: 'app-don-detail',
+  standalone: true,
   imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './don-detail.html',
-  styleUrl: './don-detail.css',
+  styleUrls: ['./don-detail.css'],
 })
 export class DonDetail implements OnInit {
   don!: DonDetailDto;
-
-  demandaires: any;
-
-  currentImageIndex: number = 0;
   dons: DonDetailDto[] = [];
-  beneficiaireSelectionne?: string;
-  currentDonId?: number;
+  demandaires: any[] = [];
+
   idDon!: number;
-  isDetailModalOpen: boolean = false;
+  currentImageIndex = 0;
+  isDetailModalOpen = false;
+
+  // --- Modales ---
+  isAttribuerModalOpen = false;
+  isDeclineModalOpen = false;
+  isRevoqueModalOpen = false;
+  isPublishModalOpen = false;
+  isNotifyModalOpen = false;
+
+  currentDonId?: number;
+  raisonDeclin = '';
+  message = '';
+
+  // --- Recherche bénéficiaires ---
+  searchTerm = '';
+  beneficiaries: any[] = [];
+  filteredBeneficiaries: any[] = [];
+  selectedBeneficiary: any | null = null;
+  showSuggestions = false;
+  beneficiareID!: number;
+  beneficiareName!: string;
+  imageUrl: any;
 
   constructor(
     private data: Data,
@@ -38,7 +56,6 @@ export class DonDetail implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Vérifier si un ID est présent dans l'URL pour l'édition
     this.idDon = this.route.snapshot.params['id'];
     if (this.idDon) {
       this.loadDons(this.idDon);
@@ -47,17 +64,15 @@ export class DonDetail implements OnInit {
     }
   }
 
-  searchTerm = '';
-  beneficiaries: any[] = [];
-  filteredBeneficiaries: any[] = [];
-  selectedBeneficiary: any[] = [];
-  showSuggestions = false;
-  beneficiareID!: number;
-  beneficiareName!:string;
+  /** ===========================
+   *   🔍 Recherche bénéficiaire
+   *  =========================== */
   onSearch(): void {
-    const term = this.searchTerm.toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
     this.filteredBeneficiaries = this.beneficiaries.filter(
-      (b) => b.name.toLowerCase().includes(term) || b.phoneNumber.toLowerCase().includes(term)
+      (b) =>
+        b.name?.toLowerCase().includes(term) ||
+        b.phoneNumber?.toLowerCase().includes(term)
     );
     this.showSuggestions = true;
   }
@@ -75,161 +90,160 @@ export class DonDetail implements OnInit {
     setTimeout(() => (this.showSuggestions = false), 200);
   }
 
-  loadDons(id: number) {
+  /** ===========================
+   *   📦 Chargement du don
+   *  =========================== */
+  loadDons(id: number): void {
     this.spinner.show();
-    this.data.getData(Env.LIST_USER).subscribe((res: any) => {
-      this.beneficiaries = res;
+    this.data.getData(Env.LIST_USER).subscribe({
+      next: (res: any) => (this.beneficiaries = res),
+      error: () => this.toastr.error('Erreur lors du chargement des bénéficiaires.'),
     });
-    this.data.getDataById(Env.DONATION, id).subscribe(
-      (res: any) => {
-        this.don = res ?? [];
-        this.dons = res ?? [];
-        if (res.isAvailable != 'DECLINE' && res.isAvailable != 'EN_ATTENTE') {
-          this.demandaires = res.demandeurs;
-        }
+
+    this.data.getDataById(Env.DONATION, id).subscribe({
+      next: (res: any) => {
+        this.don = res;
+        this.imageUrl = Env.IMAGE_URL;
+        this.demandaires = res.demandeurs ?? [];
+        console.log(res);
         this.spinner.hide();
       },
-      (error) => {
+      error: () => {
         this.spinner.hide();
-        this.toastr.error('Erreur lors du chargement des dons.', 'Erreur');
-      }
-    );
+        this.toastr.error('Erreur lors du chargement du don.', 'Erreur');
+      },
+    });
   }
 
-  attribuerEtLivrer(id: number) {
-    this.isAttribuerModalOpen = true;
+  /** ===========================
+   *   ⚙️ Actions sur le don
+   *  =========================== */
+  attribuerEtLivrer(id: number): void {
     this.openAttribuerModal(id);
-    if (!this.beneficiaireSelectionne) {
+  }
+
+  confirmerAttribution(): void {
+    if (!this.currentDonId || !this.selectedBeneficiary) {
       this.toastr.warning('Veuillez sélectionner un bénéficiaire.', 'Attention');
       return;
     }
-  }
-
-  confirmerDeclin() {
-    if (!this.currentDonId) return;
 
     this.spinner.show();
-    this.updateDonStatut(this.currentDonId, 'Decline');
+    this.data
+      .putDataNotId(
+        `${Env.DEMANDE_DONATION}${this.currentDonId}/${this.beneficiareID}`
+      )
+      .subscribe({
+        next: () => {
+          this.spinner.hide();
+          this.toastr.success(
+            `Don #${this.currentDonId} attribué à ${this.beneficiareName} et marqué comme livré.`,
+            'Succès'
+          );
+          this.loadDons(this.idDon);
+          this.closeModal();
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toastr.error(`Erreur lors de l’attribution du don.`, 'Erreur');
+        },
+      });
   }
 
-  private updateDonStatut(id: number, statut: string, beneficiaire?: string) {
-    this.data.putData(Env.DONATION + 'statut/', id, statut, 'statut').subscribe(
-      (res) => {
-        const don = this.dons.find((d) => d.id === id);
-        // if (don) don.statut = statut;
+  confirmerDeclin(): void {
+    if (!this.currentDonId) return;
+    if (!this.raisonDeclin.trim()) {
+      this.toastr.warning('Veuillez entrer une raison de déclin.');
+      return;
+    }
+    this.updateDonStatut(this.currentDonId,"Decline",`?raison=${encodeURIComponent(this.raisonDeclin)}`)
+  }
+  confirmerRevoque(): void {
+    if (!this.currentDonId) return;
+    if (!this.raisonDeclin.trim()) {
+      this.toastr.warning('Veuillez entrer une raison de revoquez.');
+      return;
+    }
+    this.updateDonStatut(this.currentDonId,"Revoque",`?raison=${encodeURIComponent(this.raisonDeclin)}`)
+  }
+
+  confirmerEnvoie(): void {
+    if (!this.currentDonId) return;
+    const donorID = this.don.donorId;
+    if (!this.message.trim()) {
+      this.toastr.warning('Veuillez entrer votre message.');
+      return;
+    }
+    this.updateDonStatutPost(this.currentDonId,"Notifie",`/${donorID}?message=${encodeURIComponent(this.message)}`)
+  }
+
+  confirmerPublication(): void {
+    if (!this.currentDonId) return;
+    this.updateDonStatut(this.currentDonId, 'Publie');
+    this.closeModal();
+  }
+
+  private updateDonStatutPost(id: number, statut: string, param: string = ''): void {
+    this.spinner.show();
+
+    this.data.post(`${Env.DONATION}statut/${id}/${statut}${param}`).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.toastr.success(`Message envoyer avec succès.`, 'Succès');
+        this.loadDons(this.idDon);
+        this.closeModal();
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error("Erreur lors de l'envoie du message.", 'Erreur');
+      },
+    });
+  }
+
+
+
+  private updateDonStatut(id: number, statut: string,param:string=''): void {
+    this.spinner.show();
+    this.data.put(`${Env.DONATION}statut/${id}/${statut}${param}`).subscribe({
+      next: () => {
         this.spinner.hide();
         this.toastr.success(`Don ${statut.toLowerCase()} avec succès.`, 'Succès');
         this.loadDons(this.idDon);
       },
-      (error) => {
+      error: () => {
         this.spinner.hide();
         this.toastr.error('Erreur lors de la mise à jour du don.', 'Erreur');
-      }
-    );
+      },
+    });
+    this.closeModal()
   }
 
-  // --- Propriétés des Modales ---
-  isAttribuerModalOpen: boolean = false;
-  isDeclineModalOpen: boolean = false;
-
-  // currentDonId: number | null = null;
-  // beneficiaireSelectionne: string = '';
-  raisonDeclin: string = '';
-  isPublishModalOpen: any;
-
-  allDons: any;
-
+  /** ===========================
+   *   📸 Gestion images
+   *  =========================== */
   prevImage(): void {
-    this.currentImageIndex =
-      (this.currentImageIndex - 1 + this.don.imageUrls.length) % this.don.imageUrls.length;
+    if (this.don.imageUrls?.length)
+      this.currentImageIndex =
+        (this.currentImageIndex - 1 + this.don.imageUrls.length) %
+        this.don.imageUrls.length;
   }
 
   nextImage(): void {
-    this.currentImageIndex = (this.currentImageIndex + 1) % this.don.imageUrls.length;
+    if (this.don.imageUrls?.length)
+      this.currentImageIndex =
+        (this.currentImageIndex + 1) % this.don.imageUrls.length;
   }
 
   goToImage(index: number): void {
     this.currentImageIndex = index;
   }
 
-  publier(id: number): void {
-    console.log('Action: Publier le don', this.don.id);
-    this.openPublishModal(id);
-  }
-
-  decliner(): void {
-    console.log('Action: Décliner le don', this.don.id);
-  }
-
-  notifier(): void {
-    console.log('Action: Notifier');
-  }
-
-  // attribuerEtLivrer(id:number): void {
-  //   console.log(
-  //     "Action: Ouvrir le modal d'attribution et marquer comme Livré pour le don",
-  //     this.don.id
-  //   );
-  //   this.openAttribuerModal(id);
-  // }
-
-  declinerDon(id: number): void {
-    console.log('Action: Décliner/Annuler le don', this.don.id);
-    this.openDeclineModal(id);
-  }
-
-  modifierAttribution(id: number): void {
-    console.log("Action: Modifier l'attribution (Statut ou Bénéficiaire) pour le don", this.don.id);
-    // Logique de modification
-  }
-
-  supprimer(id: number) {
-    throw new Error('Method not implemented.');
-  }
-  // --- Méthodes de Gestion des Modales ---
-
+  /** ===========================
+   *   🪟 Modales
+   *  =========================== */
   openAttribuerModal(donId: number): void {
     this.currentDonId = donId;
-    this.beneficiaireSelectionne = '';
     this.isAttribuerModalOpen = true;
-  }
-
-  closeModal(): void {
-    this.isAttribuerModalOpen = false;
-    this.isDeclineModalOpen = false;
-    this.isPublishModalOpen = false;
-    this.isDetailModalOpen = false;
-    // this.currentDonId = null;
-  }
-
-  // Action réelle d'attribution et de livraison
-  confirmerAttribution(): void {
-    if (this.currentDonId && this.selectedBeneficiary) {
-      console.log(
-        `Don #${this.currentDonId} attribué à : ${this.beneficiareName} et marqué comme LIVRÉ.`
-      );
-
-      // Ici, appel de votre service pour mettre à jour le statut et le bénéficiaire
-      this.spinner.show();
-      this.data
-        .putDataNotId(
-          Env.DEMANDE_DONATION + this.currentDonId + '/' + this.beneficiareID
-        )
-        .subscribe(
-          (res) => {
-            this.spinner.hide();
-            console.log(res);
-            console.log(this.selectedBeneficiary);
-            this.toastr.success(`Don #${this.currentDonId} attribué à : ${this.beneficiareName} et marqué comme LIVRÉ.`,"Succes")
-            this.loadDons(this.idDon);
-            this.closeModal();
-          },
-          (err) => {
-            console.log(err);
-            this.toastr.error(`Une erreur s'est produite lors de l'assignement de don.`,"Erreur");
-          }
-        );
-    }
   }
 
   openDeclineModal(donId: number): void {
@@ -238,51 +252,75 @@ export class DonDetail implements OnInit {
     this.isDeclineModalOpen = true;
   }
 
+  openRevoqueModal(donId: number): void {
+    this.currentDonId = donId;
+    this.raisonDeclin = '';
+    this.isRevoqueModalOpen = true;
+  }
+
+  openNotifyModal(donId: number): void {
+    this.currentDonId = donId;
+    this.message = '';
+    this.isNotifyModalOpen = true;
+  }
+
   openPublishModal(donId: number): void {
     this.currentDonId = donId;
     this.isPublishModalOpen = true;
   }
 
-  confirmerPublication(): void {
-    if (this.currentDonId) {
-      console.log(`Don #${this.currentDonId} publié avec succès.`);
-
-      this.closeModal();
-    }
+  closeModal(): void {
+    this.isAttribuerModalOpen = false;
+    this.isDeclineModalOpen = false;
+    this.isRevoqueModalOpen = false;
+    this.isPublishModalOpen = false;
+    this.isDetailModalOpen = false;
+    this.isNotifyModalOpen = false;
   }
 
-  detail: any;
+  /** ===========================
+   *   📨 Approbation / Rejet
+   *  =========================== */
+  approuver(p: any): void {
+    this.spinner.show();
+    this.data.putData(Env.DEMANDE_DONATION, p.id, true, 'accept').subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.toastr.success(`Demande approuvée.`, 'Succès');
+        this.loadDons(this.idDon);
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error('Erreur lors de l’approbation.', 'Erreur');
+      },
+    });
+  }
 
-  viewDetails(don: any): void {
-    this.detail = don;
+  rejeter(p: any): void {
+    this.spinner.show();
+    this.data.putData(Env.DEMANDE_DONATION, p.id, false, 'accept').subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.toastr.success(`Demande rejetée.`, 'Succès');
+        this.loadDons(this.idDon);
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error('Erreur lors du rejet.', 'Erreur');
+      },
+    });
+  }
+
+  /** ===========================
+   *   👁️ Détails d'une demande
+   *  =========================== */
+  detail: any;
+  viewDetails(p: any): void {
+    this.detail = p;
     this.isDetailModalOpen = true;
   }
 
-  approuver(don: any) {
-    this.data.putData(Env.DEMANDE_DONATION, don.id, true, 'accept').subscribe(
-      (res) => {
-        this.spinner.hide();
-        this.toastr.success(`Don ${this.don.title.toLowerCase()} avec succès.`, 'Succès');
-        this.loadDons(this.idDon);
-      },
-      (error) => {
-        this.spinner.hide();
-        this.toastr.error('Erreur lors de la mise à jour du don.', 'Erreur');
-      }
-    );
-  }
-
-  rejeter(don: any) {
-    this.data.putData(Env.DEMANDE_DONATION, don.id, false, 'accept').subscribe(
-      (res) => {
-        this.spinner.hide();
-        this.toastr.success(`Don ${this.don.title.toLowerCase()} avec succès.`, 'Succès');
-        this.loadDons(this.idDon);
-      },
-      (error) => {
-        this.spinner.hide();
-        this.toastr.error('Erreur lors de la mise à jour du don.', 'Erreur');
-      }
-    );
+  notifier(): void {
+    this.toastr.info('Notification envoyée (simulation).');
   }
 }

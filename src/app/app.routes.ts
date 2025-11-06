@@ -17,6 +17,7 @@ import { NotifAccueilComponent } from './pages/notificationGestion/notif-accueil
 import { OrgCreate } from './pages/organisationGestion/org-create/org-create';
 import { AssoCreate } from './pages/associationGestion/asso-create/asso-create';
 import { ParametreIndex } from './pages/parametres/parametre-index/parametre-index';
+import { NotFound } from './pages/not-found/not-found';
 
 export const routes: Routes = [
 
@@ -33,6 +34,8 @@ export const routes: Routes = [
           {path:'',component:AssoAccueil},
           {path:'create',component:AssoCreate},
           {path:'edite/:id',component:AssoCreate},
+
+          {path:'**',component:AssoAccueil},
         ],
         data: { titre: 'Gestion des associations' }
       },
@@ -42,12 +45,16 @@ export const routes: Routes = [
           {path:'',component:OrgAccueil},
           {path:'create',component:OrgCreate},
           {path:'edite/:id',component:OrgCreate},
+
+          {path:'**',component:OrgAccueil},
         ],data: { titre: 'Gestion d\'Ong' }
       },
 
       // Les routes pour la page des notifications
       {path:'notifications',component:NotifIndex,children:[
           {path:'',component:NotifAccueilComponent},
+
+          {path:'**',component:NotifAccueilComponent},
 
         ],data: { titre: 'Gestion des notifications' }
       },
@@ -63,10 +70,7 @@ export const routes: Routes = [
       },
 
       // Les routes pour la page des roles
-      {path:'roles',component:Role,children:[
-        {path:'',component:Dashboard},
-
-      ],data: { titre: 'Gestion des roles' }},
+      {path:'roles',component:Role,data: { titre: 'Gestion des roles' }},
 
       // Les routes pour la page des paramètres
       {path:'parametres',component:ParametreIndex,data: { titre: 'Paramètres' }},
@@ -79,7 +83,7 @@ export const routes: Routes = [
       ],data: { titre: 'Paramètres avancés' }},
 
 
-      // {path:'**',redirectTo:'dashboard'}
+      // {path:'**',component:NotFound}
     ],
     canActivate:[authGuard]
   },

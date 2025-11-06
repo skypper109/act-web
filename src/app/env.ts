@@ -22,4 +22,7 @@ export class Env {
 
   public static
     LIST_USER=Env.DONATION+"users";
+
+  public static
+    IMAGE_URL="http://localhost:8085/api/v1/act-org/uploads/";
 }

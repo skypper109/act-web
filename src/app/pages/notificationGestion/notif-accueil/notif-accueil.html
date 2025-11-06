@@ -14,7 +14,7 @@
         <option value="ong">Ong</option>
       </select>
 
-      <button class="btn-filter">
+      <button class="btn-filter" (click)="filter()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -247,7 +247,16 @@
     <label>Titre :</label>
     <input [(ngModel)]="newNotif!.titre" />
     <label>Type :</label>
-    <input [(ngModel)]="newNotif!.type" />
+    <select [(ngModel)]="newNotif!.type" id="">
+
+      <option value="fonctionnalite">Nouvelle Fonctionnalite</option>
+      <option value="campagne">Campagne</option>
+      <option value="validation">Validation</option>
+      <option value="alerte">Alerte</option>
+      <option value="maintenance">Maintenance</option>
+      <option value="probleme">Probleme</option>
+
+    </select>
     <label>Destinataires :</label>
     <select [(ngModel)]="newNotif!.destinataires" id="">
 

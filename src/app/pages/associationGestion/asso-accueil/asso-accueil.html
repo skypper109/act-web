@@ -34,7 +34,7 @@
     <tbody>
       <tr *ngFor="let asso of paginatedAssociations">
         <td class="tdTitre">{{ asso.name }}</td>
-        <td>{{ asso.typeAssociation }}</td>
+        <td>{{ asso.categorie}}</td>
         <td>{{ asso.email }}<br />{{ asso.phone }}</td>
         <td>
           <span class="status" [ngClass]="asso.statut">
@@ -80,52 +80,76 @@
     </div>
   </div>
 </div>
-
-<!-- ========== MODALE APERCU ========== -->
+<!-- ========== MODALE APERCU ASSOCIATION ========== -->
 @if (showViewModal) {
 <div class="modal">
   <div class="modal-content vue">
-    <div class="content">
-      <div class="btn">
-        <button  style="position: absolute;top: 0; right: 0; background-color: rgb(205, 30, 45);color: white;" (click)="closeModals()">&times; fermer</button>
-      </div>
-      <div class="icon">
-        <img src="edite/association.svg" alt="" srcset="" />
-      </div>
-      <div class="name-status">
-        <h3>{{ selectedAssociation?.name }}</h3>
-        <span class="status" [ngClass]="selectedAssociation?.statut">{{ selectedAssociation?.statut }}</span>
-        <p>{{ selectedAssociation?.description || 'N/A' }}</p>
-      </div>
 
+    <!-- Header fixe -->
+    <!-- Bannière couverture -->
+    <div class="modal-banner" *ngIf="covertUrl">
+      <img [src]="covertUrl || 'assets/images/default-banner.png'" alt="Couverture de {{ selectedAssociation?.name }}" />
+    </div>
+    <div class="modal-header">
+      <div class="icon">
+        <img [src]="imageUrl || 'assets/images/default-logo.png'" alt="Logo de {{ selectedAssociation?.name }}" />
+      </div>
+      <div class="header-info">
+        <h3>{{ selectedAssociation?.name }}</h3>
+        <span class="status" [ngClass]="selectedAssociation?.statut">
+          {{ selectedAssociation?.statut }}
+        </span>
+      </div>
+      <button class="close-btn" (click)="closeModals()">&times;</button>
+    </div>
+
+    <!-- Body scrollable -->
+    <div class="modal-body">
+      <p>{{ selectedAssociation?.description || 'Aucune description fournie.' }}</p>
       <div class="info">
-        <p><strong>Catégorie :</strong> {{ selectedAssociation?.categorie }}</p>
+        <p><strong>Catégorie :</strong> {{ selectedAssociation?.categorie || 'N/A' }}</p>
         <p><strong>Email :</strong> {{ selectedAssociation?.email }}</p>
         <p><strong>Téléphone :</strong> {{ selectedAssociation?.phone }}</p>
         <p><strong>Adresse :</strong> {{ selectedAssociation?.address || 'N/A' }}</p>
-        <!-- <p><strong>Description :</strong> </p> -->
-        <p><strong>Date de création :</strong> {{ selectedAssociation?.dateCreation }}</p>
+        <p><strong>Date de création :</strong> {{ selectedAssociation?.dateCreation | date:'dd/MM/yyyy' }}</p>
+        <p><strong>Type :</strong> {{ selectedAssociation?.typeAssociation || 'N/A' }}</p>
+        <p><strong>Pays :</strong> {{ selectedAssociation?.pays || 'N/A' }}</p>
+        <p><strong>Ville :</strong> {{ selectedAssociation?.ville || 'N/A' }}</p>
+        <p><strong>Site Web :</strong>
+          <a *ngIf="selectedAssociation?.siteWeb" [href]="selectedAssociation?.siteWeb" target="_blank">{{ selectedAssociation?.siteWeb }}</a>
+          <span *ngIf="!selectedAssociation?.siteWeb">N/A</span>
+        </p>
+        <p><strong>Numéro d’enregistrement :</strong> {{ selectedAssociation?.numeroEnregistrement || 'N/A' }}</p>
+        <p><strong>Représentant :</strong> {{ selectedAssociation?.nomComplet || 'N/A' }}</p>
+        <p><strong>Fonction :</strong> {{ selectedAssociation?.fonction || 'N/A' }}</p>
+        <p><strong>Confirmation officielle :</strong>
+          <span [style.color]="selectedAssociation?.confirmationOfficielle ? 'green' : 'red'">
+            {{ selectedAssociation?.confirmationOfficielle ? 'Oui' : 'Non' }}
+          </span>
+        </p>
       </div>
+    </div>
 
-    </div>
-    @if (selectedAssociation?.statut == "En_attente") {
-    <div class="modal-actions">
-      <button (click)="validerAssociation(selectedAssociation!)">Valider</button>
-      <button (click)="refuserAssociation(selectedAssociation!)">Refuser</button>
-    </div>
-    }@else {
-      @if (selectedAssociation?.active) {
-        <button (click)="desactiveAssociation(selectedAssociation!)" style="background-color: brown;color: aliceblue;width: fit-content;">Desactiver</button>
-      }@else if(!selectedAssociation?.active && selectedAssociation?.statut !== 'Rejete') {
-        <button (click)="validerAssociation(selectedAssociation!)" style="width: fit-content;">Reactiver</button>
-      }@else {
-        <button (click)="desactiveAssociation(selectedAssociation!)" style="background-color: brown;color: aliceblue;width: fit-content;">Supprimer</button>
+    <!-- Footer fixe avec boutons -->
+    <div class="modal-footer">
+      @if (selectedAssociation?.statut == 'En_attente') {
+        <button (click)="validerAssociation(selectedAssociation!)" class="btn-primary">Valider</button>
+        <button (click)="refuserAssociation(selectedAssociation!)">Refuser</button>
+      } @else {
+        @if (selectedAssociation?.active) {
+          <button (click)="desactiveAssociation(selectedAssociation!)" class="btn-warning">Désactiver</button>
+        } @else if (!selectedAssociation?.active && selectedAssociation?.statut !== 'Rejete') {
+          <button (click)="validerAssociation(selectedAssociation!)" class="btn-primary">Réactiver</button>
+        } @else {
+          <button (click)="desactiveAssociation(selectedAssociation!)" class="btn-warning">Supprimer</button>
+        }
       }
-    }
-    <!-- <button (click)="closeModals()">Fermer</button> -->
+    </div>
+
   </div>
 </div>
 }
+
 
 <!-- ========== MODALE SUPPRESSION ========== -->
 @if (showDeleteModal) {

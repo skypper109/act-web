@@ -22,6 +22,10 @@ export class InterceptorHttp implements HttpInterceptor {
       // Poursuivre la requête avec les nouveaux en-têtes
       return next.handle(authRequest);
     }
+    if (request.url.includes('/uploads/')) {
+      return next.handle(request); 
+    }
+
 
     //Si aucun jeton n'est trouvé, poursuivre la requête originale.
     return next.handle(request);

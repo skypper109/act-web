@@ -1,0 +1,36 @@
+<div class="not-found-container">
+  <div class="not-found-text">
+    <h1>404 — Page introuvable</h1>
+    <p>
+      Oups ! La page que vous cherchez n’existe pas ou a été déplacée.<br />
+      Vérifiez l’URL ou revenez à l’accueil.
+    </p>
+
+    <div class="not-found-actions">
+      <button class="btn-primary" (click)="goHome()">Retour à l'accueil</button>
+      <!-- <button class="btn-outline" (click)="report()">Signaler un problème</button> -->
+    </div>
+  </div>
+
+  <div class="not-found-illustration">
+    <svg width="320" height="240" viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="40" r="48" fill="#60a5fa" opacity="0.08"></circle>
+      <circle cx="300" cy="220" r="70" fill="#388E3C" opacity="0.06"></circle>
+
+      <g transform="translate(40,30)" class="floating">
+        <rect x="0" y="0" width="220" height="160" rx="14" fill="#071226" stroke="#60a5fa" stroke-width="1.5" />
+        <rect x="18" y="18" width="184" height="24" rx="6" fill="#0b1a2a" />
+        <rect x="18" y="52" width="140" height="10" rx="5" fill="#0b1a2a" />
+        <rect x="18" y="72" width="120" height="10" rx="5" fill="#0b1a2a" />
+        <circle cx="184" cy="122" r="18" fill="#60a5fa" />
+        <text x="176" y="127" font-size="12" fill="#042023" font-weight="700">404</text>
+      </g>
+
+      <g transform="translate(200,120)" class="floating delay">
+        <circle cx="72" cy="32" r="44" fill="#06202e" stroke="#fff" stroke-opacity="0.04" />
+        <rect x="112" y="68" width="68" height="12" rx="6" transform="rotate(28 112 68)" fill="#388E3C" />
+        <circle cx="72" cy="32" r="24" fill="none" stroke="#388E3C" stroke-width="3" />
+      </g>
+    </svg>
+  </div>
+</div>

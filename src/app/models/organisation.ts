@@ -4,6 +4,7 @@ export class Organisation {
   typeOrganisation!: string;
   descriptionMission!: string;
   logoFile!: File | null;
+  logoCouverture!: File | null;
 
   // Coordonnées
   emailContact!: string;
@@ -26,4 +27,5 @@ export class Organisation {
   statut!: 'En-attente' | 'Approuver' | 'Rejeter';
   confirmationOfficielle!: boolean;
   estActif!: boolean;
+  logoUrl!: string;
 }
