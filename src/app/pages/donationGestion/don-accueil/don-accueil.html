@@ -58,7 +58,7 @@
     <tbody>
       <tr *ngFor="let don of paginatedDons">
         <td class="tdTitre">{{ don.title }}</td>
-        <td>{{ don.typeDon }}</td>
+        <td>{{ don.typeDon ||"" }}</td>
         <td>{{ don.donorName }}</td>
         <td>{{ don.donorName }}</td>
         <td>

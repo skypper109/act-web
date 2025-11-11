@@ -3,7 +3,7 @@ import { Don } from '../../../models/don';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DONATION_REQUESTS_MOCK, DONS_MOCK, DonService, MOCK_SOCIAL_ACTIONS } from '../../../services/don-service';
+import { DONATION_REQUESTS_MOCK,  DonService, MOCK_SOCIAL_ACTIONS } from '../../../services/don-service';
 import { Data } from '../../../services/data';
 import { DonIndex } from '../don-index/don-index';
 import { error } from 'console';
@@ -61,9 +61,7 @@ export class DonAccueil implements OnInit {
   applyFilters(): void {
     this.filteredDons = this.dons.filter(d =>
       (this.filterStatut === 'Tous' || d.isAvailable === this.filterStatut) &&(
-      d.descriptionComplete.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      d.typeDon.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      d.descriptionCourte.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      d.description.toLowerCase().includes(this.searchTerm.toLowerCase()))
     );
   }
 

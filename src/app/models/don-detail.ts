@@ -4,10 +4,10 @@ export class DonDetailDto {
   etat!: 'Neuf' | 'Occasion' | 'Reconditionne';
   isAvailable!: 'EN_ATTENTE' | 'PUBLIE' | 'DECLINE' | 'ATTRIBUE' | 'LIVRE';
   location!: string;
-  typeDon!: string;
+  typeDon?: string;
   quantity!: number;
   descriptionCourte!: string;
-  descriptionComplete!: string;
+  description!: string;
   caracteristiques!: string[];
   imageUrls!: string[];
   category?:'AUTRES' | 'EQUIPMENT';
