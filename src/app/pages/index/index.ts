@@ -1,15 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-index',
-  imports: [RouterOutlet, RouterLink,RouterLinkActive],
+  imports: [RouterOutlet, RouterLink,RouterLinkActive,CommonModule],
   templateUrl: './index.html',
   styleUrl: './index.css'
 })
 export class Index implements  OnInit{
   titre: string = 'Tableau de bord';
+  sideBarOpen = false;
+
+toggleSidebar() {
+  this.sideBarOpen = !this.sideBarOpen;
+}
+
   constructor(private router:Router,private route:ActivatedRoute){}
   ngOnInit(){
     this.router.events.pipe(

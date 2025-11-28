@@ -1,7 +1,7 @@
 <div class="content">
   <div class="header">
     <div class="left">
-      <img src="icones/menu.svg" alt="" srcset="" />
+      <img src="icones/menu.png" alt="" class="menuMobile" (click)="toggleSidebar()">
       <h2>{{titre}}</h2>
     </div>
     <div class="right">
@@ -33,10 +33,11 @@
     </div>
   </div>
 
-  <div class="sideBar">
+  <div class="sideBar" [ngClass]="{ 'open': sideBarOpen }">
     <div class="titreLogo">
       <h2>ACT</h2>
       <img src="icones/logoACT.svg" alt="" srcset="" />
+      <button *ngIf="sideBarOpen" class="close-btn" (click)="toggleSidebar()">&times;</button>
     </div>
 
     <div class="nav">
