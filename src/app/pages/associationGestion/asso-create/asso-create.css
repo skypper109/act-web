@@ -1,3 +1,5 @@
+/* ========= TON CSS EXISTANT (inchangé) ========= */
+
 .form-container {
   max-width: 1020px;
   margin: 10px auto;
@@ -12,7 +14,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #1890ff; /* Bleu */
+  color: #1890ff;
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
@@ -20,10 +22,10 @@
 .back-button:hover {
   text-decoration: underline;
 }
-.back-button{
+.back-button {
   cursor: pointer;
-
 }
+
 /* --- SECTIONS DU FORMULAIRE --- */
 .form-section {
   margin-bottom: 30px;
@@ -73,9 +75,10 @@ label {
 }
 label::after {
   content: "*";
-  color: #ff4d4f; /* Rouge pour les requis */
+  color: #ff4d4f;
 }
-/* Retirer l'astérisque pour les labels non requis (ex: Site web, Code postal, Statut) */
+
+/* Retrait astérisque */
 label[for="siteWeb"]::after,
 label[for="codePostal"]::after,
 label[for="email"]::after,
@@ -83,10 +86,10 @@ label[for="statut"]::after {
   content: none;
 }
 .checkbox-row label::after {
-  content: none; /* Pas d'astérisque sur le label de confirmation */
+  content: none;
 }
 
-
+/* --- CHAMPS INPUT --- */
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -113,7 +116,7 @@ input:focus, select:focus, textarea:focus {
   position: relative;
 }
 .input-with-icon input {
-  padding-right: 35px; /* Espace pour l'icône */
+  padding-right: 35px;
 }
 .input-with-icon svg {
   position: absolute;
@@ -121,7 +124,7 @@ input:focus, select:focus, textarea:focus {
   top: 50%;
   transform: translateY(-50%);
   color: #999;
-  pointer-events: none; /* L'icône ne bloque pas le clic sur l'input */
+  pointer-events: none;
 }
 
 /* --- LOGO UPLOAD --- */
@@ -145,10 +148,11 @@ input:focus, select:focus, textarea:focus {
   color: #999;
   font-size: 0.8rem;
 }
-.preview-box img{
+.preview-box img {
   width: 120px;
   height: 120px;
 }
+
 .file-input-wrapper button {
   padding: 8px 15px;
   border: 1px solid #d9d9d9;
@@ -169,7 +173,6 @@ input:focus, select:focus, textarea:focus {
   font-size: 0.75rem;
 }
 
-
 /* --- CHECKBOX --- */
 .checkbox-row {
   display: flex;
@@ -180,7 +183,7 @@ input:focus, select:focus, textarea:focus {
   font-weight: normal;
   font-size: 0.95rem;
   margin-top: 0;
-  margin-left: 8px; /* Espacement après la case */
+  margin-left: 8px;
 }
 .custom-checkbox {
   width: 18px;
@@ -189,7 +192,6 @@ input:focus, select:focus, textarea:focus {
   margin-top: 2px;
 }
 
-
 /* --- FOOTER ACTIONS --- */
 .form-footer {
   display: flex;
@@ -197,7 +199,6 @@ input:focus, select:focus, textarea:focus {
   gap: 10px;
   padding: 20px 0;
 }
-
 .btn-primary, .btn-secondary {
   padding: 10px 20px;
   border-radius: 6px;
@@ -205,9 +206,8 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
   transition: opacity 0.2s;
 }
-
 .btn-primary {
-  background-color: #21890f; /* Bouton "Enregistrer" */
+  background-color: #21890f;
   color: white;
   border: none;
 }
@@ -215,14 +215,13 @@ input:focus, select:focus, textarea:focus {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
 .btn-secondary {
   background-color: transparent;
   color: #555;
   border: 1px solid #d9d9d9;
 }
 
-/* --- MEDIA QUERIES (Responsive) --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
   .row {
     flex-direction: column;
@@ -241,4 +240,32 @@ input:focus, select:focus, textarea:focus {
   .form-footer button {
     width: 100%;
   }
+}
+
+
+/* ========================================================= */
+/* ========= AJOUT CSS POUR VALIDATION ANGULAR ============= */
+/* ========================================================= */
+
+/* --- CHAMPS INVALIDES (ngModel) --- */
+.ng-invalid.ng-touched {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
+}
+
+/* --- CHAMPS VALIDES (optionnel mais joli) --- */
+.ng-valid.ng-touched {
+  border-color: #52c41a;
+}
+
+/* --- MESSAGE D’ERREUR GLOBAL --- */
+.error {
+  margin-top: 5px;
+  font-size: 0.85rem;
+  color: #ff4d4f;
+}
+
+/* --- Espacement uniforme pour les erreurs --- */
+.input-group {
+  margin-bottom: 10px;
 }

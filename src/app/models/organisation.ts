@@ -28,4 +28,6 @@ export class Organisation {
   confirmationOfficielle!: boolean;
   estActif!: boolean;
   logoUrl!: string;
+  coverUrl!: string;
+  profilUrl!: string;
 }

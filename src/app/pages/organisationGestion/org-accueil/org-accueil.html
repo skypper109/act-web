@@ -10,12 +10,12 @@
     </div>
 
     <div class="rightMenu">
-      <select [(ngModel)]="filterStatut" (change)="applyFilters()">
+      <!-- <select [(ngModel)]="filterStatut" (change)="applyFilters()">
         <option value="Tous">Tous</option>
         <option value="Actif">Actif</option>
         <option value="En_attente">En attente</option>
         <option value="Rejeté">Rejeté</option>
-      </select>
+      </select> -->
       <button class="btn-primary" routerLink="/organisations/create">+ Nouvelle Organisation</button>
     </div>
   </div>
@@ -87,14 +87,14 @@
   <div class="modal-content vue">
 
     <!-- Bannière couverture -->
-    <div class="modal-banner" *ngIf="selectedOrganisation?.logoCouverture">
-      <img [src]="imageUrl || 'assets/images/default-banner.png'" alt="Couverture de {{ selectedOrganisation?.nom }}" />
+    <div class="modal-banner" *ngIf="selectedOrganisation?.coverUrl">
+      <img [src]="coverUrl || 'assets/images/default-banner.png'" alt="Couverture de {{ selectedOrganisation?.nom }}" />
     </div>
 
     <!-- Header fixe -->
     <div class="modal-header">
       <div class="icon">
-        <img [src]="imageUrl" alt="Logo de {{ selectedOrganisation?.nom }}" />
+        <img [src]="logoUrl" alt="Logo de {{ selectedOrganisation?.nom }}" />
       </div>
       <div class="header-info">
         <h3>{{ selectedOrganisation?.nom }}</h3>

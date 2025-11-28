@@ -269,7 +269,7 @@
     <label>Contenu :</label>
     <textarea [(ngModel)]="newNotif!.contenu"></textarea>
     <div class="modal-actions">
-      <button mat-raised-button color="primary" [class.spinner]="loading" [disabled]="loading" (click)="saveNew()">Enregistrer</button>
+      <button mat-raised-button color="primary" (click)="saveNew()">Enregistrer</button>
       <!-- <button (click)="saveNew()">Enregistrer</button> -->
       <button (click)="closeModals()">Annuler</button>
     </div>

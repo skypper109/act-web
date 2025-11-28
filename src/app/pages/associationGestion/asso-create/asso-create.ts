@@ -15,7 +15,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './asso-create.css'
 })
 export class AssoCreate implements OnInit {
-  fichier!:File;
+[x: string]: any;
+  logo!:File;
+  cover!:File;
+
   nouvelleAssociation: Association = {
     categorie:"Éducation",
     statut:"En_attente",
@@ -38,6 +41,7 @@ export class AssoCreate implements OnInit {
   ngOnInit(): void {
     // Vérifier si un ID est présent dans l'URL pour l'édition
     this.assoID = this.route.snapshot.params['id'];
+    this.spinner.show();
     if (this.assoID) {
       // Charger les données de l'association existante pour l'édition
       this.isEditMode = true;
@@ -45,16 +49,21 @@ export class AssoCreate implements OnInit {
         (res: any) => {
           this.nouvelleAssociation = res.data;
           console.log(this.nouvelleAssociation);
+          this.coverPath = `${Env.IMAGE_URL + res.data.covertUrl}`;
+          this.logoPath = `${Env.IMAGE_URL + res.data.logoUrl}`;
+          this.spinner.hide();
           if (!res.data) {
             this.router.navigate(['/associations']);
           }
         },
         (error) => {
           console.error('Erreur lors du chargement des données de l\'association :', error);
+          this.spinner.hide();
           this.router.navigate(['/associations']);
         }
       );
     }
+    this.spinner.hide();
   }
 
   logoPath:string | ArrayBuffer | null = null;
@@ -71,7 +80,7 @@ export class AssoCreate implements OnInit {
       if (type === 'logo') {
         this.nouvelleAssociation.logoFile = fileList.files[0];
         console.log('Logo sélectionné :', fileList.files[0].name);
-        this.fichier = file;
+        this.logo = fileList.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = ()=>{
@@ -80,7 +89,7 @@ export class AssoCreate implements OnInit {
       }else if (type === 'couverture') {
         this.nouvelleAssociation.logoCouverture = fileList.files[0];
         console.log('Logo sélectionné :', fileList.files[0].name);
-        this.fichier = file;
+        this.cover = fileList.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = ()=>{
@@ -98,8 +107,8 @@ export class AssoCreate implements OnInit {
 
     this.spinner.show();
     const request$ = this.isEditMode
-      ? this.data.putDataWithFile(Env.ASSOCIATION, this.assoID, this.nouvelleAssociation, this.fichier)
-      : this.data.postDataWithFile(Env.ASSOCIATION + "create", this.nouvelleAssociation, this.fichier);
+      ? this.data.putDataWithFiles(Env.ASSOCIATION, this.assoID, this.nouvelleAssociation, this.logo,undefined,this.cover)
+      : this.data.postDataWithFiles(Env.ASSOCIATION + "create", this.nouvelleAssociation, this.logo,undefined,this.cover);
 
     request$.subscribe(
       () => {
@@ -145,5 +154,11 @@ export class AssoCreate implements OnInit {
       this.currentStep++;
     }
   }
+
+  triggerFile(id: string) {
+    const input = document.getElementById(id) as HTMLInputElement;
+    if (input) input.click();
+  }
+
 
 }

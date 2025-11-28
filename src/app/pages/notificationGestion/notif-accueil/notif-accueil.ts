@@ -18,7 +18,7 @@ export class NotifAccueilComponent implements OnInit {
 
 
   notifications: Notification[] = [];
-  newNotif: Notification = new Notification();
+  newNotif!: Notification ;
   // selectedNotification?: Notification;
 
   constructor(
@@ -40,9 +40,10 @@ export class NotifAccueilComponent implements OnInit {
         console.log(res);
         this.spinner.hide();
       },
-      error => {
+      (error:any) => {
         this.spinner.hide();
         this.toastr.error("Erreur lors du chargement des notifications.", "Erreur");
+        console.log(error);
       }
     );
   }
@@ -50,19 +51,15 @@ export class NotifAccueilComponent implements OnInit {
 
   saveNew() {
     if (!this.newNotif) return;
-    this.loading = true;
-
     this.spinner.show();
     this.data.postData(Env.NOTIFICATION, this.newNotif).subscribe(
-      res => {
+      (res) => {
         this.spinner.hide();
         this.toastr.success("Notification créée avec succès.", "Succès");
-        this.notifications.push(this.newNotif);
-        this.newNotif = new Notification();
         this.loadNotifications();
         this.closeModals();
       },
-      error => {
+      (error) => {
         this.spinner.hide();
         this.toastr.error("Erreur lors de la création.Veillez bien renseigner les champs.", "Erreur");
       }
@@ -150,7 +147,6 @@ export class NotifAccueilComponent implements OnInit {
   // --- LOGIQUE D'ACTIONS ---
   nouvelleNotification(): void {
     console.log("Action: Ouvrir le formulaire de nouvelle notification");
-    this.showCreateModal = true;
     this.newNotif = {
       type: '',
       titre: '',
@@ -158,6 +154,7 @@ export class NotifAccueilComponent implements OnInit {
       destinataires: '',
       dateCreation: new Date(Date.now()),
     };
+    this.showCreateModal = true;
 
   }
 
@@ -182,13 +179,6 @@ export class NotifAccueilComponent implements OnInit {
 
   // --- LOGIQUE DE SUPPRESSION ---
   deleteNotification(notificationId: number): void {
-    // if (confirm("Êtes-vous sûr de vouloir supprimer cette notification ?")) {
-    //   this.notifications = this.notifications.filter(
-    //     notif => notif.id !== notificationId
-    //   );
-    //   this.filterNotifications();
-    //   console.log(`Notification #${notificationId} supprimée localement.`);
-    // }
     this.selectedNotification = this.notifications.find(n => n.id === notificationId) || null;
     this.showDeleteModal = true;
   }
@@ -204,7 +194,7 @@ export class NotifAccueilComponent implements OnInit {
 
 
     openCreateModal(notif: Notification) {
-      this.createNotification = { ...notif };
+      // this.createNotification = { ...notif };
       this.showCreateModal = true;
     }
 

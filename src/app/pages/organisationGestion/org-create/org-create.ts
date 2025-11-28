@@ -6,6 +6,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Data } from '../../../services/data';
 import { Env } from '../../../env';
 import { readFile } from 'node:fs';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-org-create',
@@ -15,30 +17,9 @@ import { readFile } from 'node:fs';
 })
 export class OrgCreate implements OnInit {
 
-  fichier!:File;
-  // nouvelleOrganisation: Organisation = {
-  //   id: 0,
-  //   nom: '',
-  //   typeOrganisation: '',
-  //   descriptionMission: '',
-  //   logoFile: null,
-  //   emailContact: '',
-  //   telephoneContact: '',
-  //   siteWeb: '',
-  //   adresse: '',
-  //   ville: '',
-  //   codePostal: '',
-  //   pays: 'Mali',
-  //   nomCompletRepresentant: '',
-  //   fonctionRepresentant: '',
-  //   emailRepresentant: '',
-  //   telephoneRepresentant: '',
-  //   numeroEnregistrement: '',
-  //   dateCreation: new Date(Date.now()),
-  //   statut: 'Approuver',
-  //   confirmationOfficielle: false,
-  //   estActif: false
-  // };
+  logo!:File;
+
+  cover!:File;
 
   nouvelleOrganisation: Organisation = {
     typeOrganisation:'',
@@ -47,7 +28,7 @@ export class OrgCreate implements OnInit {
   } as Organisation;
   isEditMode: boolean = false;
 
-  assoID!:number;
+  orgID!:number;
 
   public currentStep = 1;
   public orgTypes = ['Humanitaire', 'Santé', 'Éducation', 'Environnement', 'Autre'];
@@ -55,24 +36,41 @@ export class OrgCreate implements OnInit {
 
   constructor(
     private organisationService: Data,
-    private data:Data,private router:Router,private route:ActivatedRoute) { }
+    private data:Data,
+    private router:Router,
+    private route:ActivatedRoute,
+            private toastr: ToastrService,
+            private spinner: NgxSpinnerService,
+  ) { }
 
   ngOnInit(): void {
+
+    this.spinner.show();
     // Vérifier si un ID est présent dans l'URL pour l'édition
-    this.assoID = this.route.snapshot.params['id'];
-    if (this.assoID) {
+    this.orgID = this.route.snapshot.params['id'];
+    if (this.orgID) {
       // Charger les données de l'association existante pour l'édition
       this.isEditMode = true;
-      this.data.getDataById(Env.ORGANISATION, this.assoID).subscribe(
+      this.data.getDataById(Env.ORGANISATION, this.orgID).subscribe(
         (res: any) => {
           this.nouvelleOrganisation = res;
+          this.logoPath = `${Env.IMAGE_URL + res.profilUrl}`;
+
+          this.coverPath =  `${Env.IMAGE_URL + res.coverUrl}`;
           console.log(this.nouvelleOrganisation);
+          this.spinner.hide();
+          if (!res) {
+            this.router.navigate(['/organisations']);
+          }
         },
         (error) => {
           console.error('Erreur lors du chargement des données de l\'Ong :', error);
+          this.spinner.hide();
+          this.router.navigate(['/organisations']);
         }
       );
     }
+    this.spinner.hide();
   }
 
   logoPath:string | ArrayBuffer | null = null;
@@ -90,6 +88,8 @@ export class OrgCreate implements OnInit {
       if (type === 'logo') {
         this.nouvelleOrganisation.logoFile = input.files[0];
 
+        this.logo = input.files[0];
+
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = ()=>{
@@ -98,6 +98,8 @@ export class OrgCreate implements OnInit {
         console.log('Logo sélectionné :', this.nouvelleOrganisation.logoFile.name);
       } else if (type === 'couverture') {
         this.nouvelleOrganisation.logoCouverture = input.files[0];
+
+        this.cover = input.files[0];
 
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -112,38 +114,28 @@ export class OrgCreate implements OnInit {
 
   onSubmit(): void {
     if (!this.isFormValid()) {
-      alert("Veuillez remplir tous les champs obligatoires et confirmer les informations.");
+      this.toastr.warning("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
-    this.isSubmitting = true;
-    if (this.isEditMode) {
-        // Mode édition
-        this.data.putDataWithFile(Env.ORGANISATION, this.assoID, this.nouvelleOrganisation,this.fichier).subscribe(
-          (res) => {
-            console.log('Organisation mise à jour avec succès :', res);
-            this.router.navigate(['/organisations']);
-          },
-          (error) => {
-            console.error('Erreur lors de la mise à jour de l\'Organisation :', error);
-          }
-        );
-        return;
-      }
+    this.spinner.show();
 
-    this.organisationService.postDataWithFile(Env.ORGANISATION,this.nouvelleOrganisation,this.fichier).subscribe({
-      next: (response) => {
-        alert('Organisation enregistrée avec succès !');
-        console.log('Réponse du backend :', response);
-        this.isSubmitting = false;
+    const request$ = this.isEditMode
+      ? this.data.putDataWithFiles(Env.ORGANISATION, this.orgID, this.nouvelleOrganisation, this.logo,undefined,this.cover)
+      : this.data.postDataWithFiles(Env.ORGANISATION, this.nouvelleOrganisation, this.logo,undefined,this.cover);
+
+    request$.subscribe(
+      () => {
+        this.spinner.hide();
+        this.toastr.success(`Organisation ${this.isEditMode ? 'mise à jour' : 'créée'} avec succès`);
         this.router.navigate(['/organisations']);
       },
-      error: (err) => {
-        console.error('Erreur lors de l’enregistrement :', err);
-        alert('Une erreur est survenue lors de l’enregistrement.');
-        this.isSubmitting = false;
+      (error) => {
+        this.spinner.hide();
+        this.toastr.error(`Erreur lors de ${this.isEditMode ? 'la mise à jour' : 'la création'}`);
+        console.error(error);
       }
-    });
+    );
   }
 
   isFormValid(): boolean {

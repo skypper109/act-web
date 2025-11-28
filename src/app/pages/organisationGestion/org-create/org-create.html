@@ -41,7 +41,7 @@
           <label>Logo</label>
           <div class="logo-preview">
             <div class="preview-box">
-              <span *ngIf="!nouvelleOrganisation.logoFile">Aucun logo</span>
+              <span *ngIf="!logoPath">Aucun logo</span>
               <img *ngIf="logoPath" [src]="logoPath" alt="Logo preview">
             </div>
             <div class="file-input-wrapper">
@@ -56,7 +56,7 @@
           <label>Couverture</label>
           <div class="logo-preview">
             <div class="preview-box">
-              <span *ngIf="!nouvelleOrganisation.logoCouverture">Aucun cover</span>
+              <span *ngIf="!coverPath">Aucun cover</span>
               <img *ngIf="coverPath" [src]="coverPath" alt="image cover">
             </div>
             <div class="file-input-wrapper">

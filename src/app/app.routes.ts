@@ -18,6 +18,7 @@ import { OrgCreate } from './pages/organisationGestion/org-create/org-create';
 import { AssoCreate } from './pages/associationGestion/asso-create/asso-create';
 import { ParametreIndex } from './pages/parametres/parametre-index/parametre-index';
 import { NotFound } from './pages/not-found/not-found';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 export const routes: Routes = [
 
@@ -87,7 +88,7 @@ export const routes: Routes = [
     ],
     canActivate:[authGuard]
   },
-
+  {path:'reset-password',component:ResetPasswordComponent},
   {path:'login',component:Login},
 
 ];

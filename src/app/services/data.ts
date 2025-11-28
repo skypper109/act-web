@@ -55,6 +55,28 @@ export class Data {
     return this.http.post(`${url}`, formData);
   }
 
+
+
+  postDataWithFiles(url: string, body: any,logo?:File,nomAttribut?:string,cover?:File) {
+    const formData = new FormData();
+    if (nomAttribut) {
+      formData.append(nomAttribut, new Blob([JSON.stringify(body)], {
+        type: 'application/json'
+      }));
+    }else{
+      formData.append('contenu', new Blob([JSON.stringify(body)], {
+        type: 'application/json'
+      }));
+    }
+    if (logo) {
+      formData.append('profil', logo);
+    }
+    if (cover) {
+      formData.append('cover', cover);
+    }
+    return this.http.post(`${url}`, formData);
+  }
+
   post(url:string){
     return this.http.post(`${url}`,null,{ headers: this.header });
   }
@@ -79,6 +101,10 @@ export class Data {
     return this.http.put(`${url}`, formData, { headers: this.header });
   }
 
+
+
+
+
   putDataWithFile(url: string, id: number, body: any,file:File) {
     const formData = new FormData();
     formData.append('contenu', new Blob([JSON.stringify(body)], {
@@ -89,6 +115,31 @@ export class Data {
     }
     return this.http.put(`${url}${id}`, formData);
   }
+
+
+
+  putDataWithFiles(url: string, id:number,body: any,logo?:File,nomAttribut?:string,cover?:File) {
+    const formData = new FormData();
+    if (nomAttribut) {
+      formData.append(nomAttribut, new Blob([JSON.stringify(body)], {
+        type: 'application/json'
+      }));
+    }else{
+      formData.append('contenu', new Blob([JSON.stringify(body)], {
+        type: 'application/json'
+      }));
+    }
+    if (logo) {
+      formData.append('profil', logo);
+    }
+    if (cover) {
+      formData.append('cover', cover);
+    }
+    return this.http.put(`${url}${id}`, formData);
+  }
+
+
+
 
   deleteData(url: string, id: number) {
     return this.http.delete(`${url}${id}`, { headers: this.header });

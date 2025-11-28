@@ -5,15 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Env } from '../../../env';
 import { Data } from '../../../services/data';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-org-accueil',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './org-accueil.html',
-  styleUrl: './org-accueil.css'
+  styleUrl: './org-accueil.css',
 })
-export class OrgAccueil  implements OnInit {
-
+export class OrgAccueil implements OnInit {
   organisations: Organisation[] = [];
   filteredOrganisations: Organisation[] = [];
   searchTerm = '';
@@ -28,26 +28,34 @@ export class OrgAccueil  implements OnInit {
   selectedOrganisation: Organisation | null = null;
   editedOrganisation: Organisation | null = null;
   imageUrl: string | undefined;
+  logoUrl: string | undefined;
+  coverUrl: string | undefined;
 
-  constructor(private data:Data,
-    private router: Router) { }
+  constructor(private data: Data,private spin: NgxSpinnerService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.loadOng();
+  }
+
+  loadOng() {
+    this.spin.show();
     this.data.getData(Env.ORGANISATION).subscribe(
-          (res: any) => {
-            this.organisations =res;
-            console.log(res && res.data ? res.data : res);
-            this.applyFilters();
-          },
-          (error: any) => {
-            console.log(error);
-          }
-        );
+      (res: any) => {
+        this.spin.hide();
+        this.organisations = res;
+        console.log(res && res.data ? res.data : res);
+        this.applyFilters();
+      },
+      (error: any) => {
+        console.log(error);
+        this.spin.hide();
+      }
+    );
   }
 
   applyFilters(): void {
-    this.filteredOrganisations = this.organisations.filter(a =>
-      (this.filterStatut === 'Tous' || a.statut === this.filterStatut)
+    this.filteredOrganisations = this.organisations.filter(
+      (a) => this.filterStatut === 'Tous' || a.statut === this.filterStatut
     );
   }
 
@@ -62,10 +70,12 @@ export class OrgAccueil  implements OnInit {
     }
   }
 
-   // ---------- MODALES ----------
+  // ---------- MODALES ----------
   openViewModal(asso: Organisation) {
     this.selectedOrganisation = asso;
-    this.imageUrl = `${Env.IMAGE_URL + this.selectedOrganisation.logoUrl}`;
+    this.logoUrl = `${Env.IMAGE_URL + this.selectedOrganisation.profilUrl}`;
+
+    this.coverUrl = `${Env.IMAGE_URL + this.selectedOrganisation.coverUrl}`;
 
     this.showViewModal = true;
   }
@@ -90,22 +100,22 @@ export class OrgAccueil  implements OnInit {
 
   saveEdit() {
     if (this.editedOrganisation) {
-      const index = this.organisations.findIndex(a => a.id === this.editedOrganisation!.id);
+      const index = this.organisations.findIndex((a) => a.id === this.editedOrganisation!.id);
       this.organisations[index] = { ...this.editedOrganisation };
       this.applyFilters();
       this.closeModals();
     }
   }
 
-  confirmDelete(id:number) {
+  confirmDelete(id: number) {
     if (this.selectedOrganisation) {
-      this.organisations = this.organisations.filter(a => a.id !== this.selectedOrganisation!.id);
-      this.data.deleteData(Env.ASSOCIATION,id).subscribe(
+      this.organisations = this.organisations.filter((a) => a.id !== this.selectedOrganisation!.id);
+      this.data.deleteData(Env.ORGANISATION, id).subscribe(
         (res: any) => {
           console.log('Organisation supprimée avec succès');
         },
         (error: any) => {
-          console.log('Erreur lors de la suppression de l\'Organisation :', error);
+          console.log("Erreur lors de la suppression de l'Organisation :", error);
         }
       );
       this.applyFilters();
@@ -115,7 +125,7 @@ export class OrgAccueil  implements OnInit {
   verifier(): void {
     if (this.showDeleteModal || this.showEditModal || this.showViewModal) {
       this.closeModals();
-    }else{
+    } else {
       return;
     }
   }

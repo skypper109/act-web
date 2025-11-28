@@ -34,19 +34,17 @@ export class Dashboard implements OnInit {
   };
 
   ngOnInit(): void {
+    this.spinner.show();
     this.loadDashboard();
+    this.spinner.hide();
   }
 
   // ----------------------------
   // Charger les données du backend
   // ----------------------------
   loadDashboard(): void {
-    this.spinner.show();
-
     this.http.get(`${Env.URL_API}dashboard/`).subscribe({
       next: (data: any) => {
-        this.spinner.hide();
-
         console.log(data);
         // Cartes principales
         this.stats = [
@@ -93,7 +91,6 @@ export class Dashboard implements OnInit {
 
       },
       error: (err) => {
-        this.spinner.hide();
         console.error(err);
         this.toastr.error('Impossible de charger les données du tableau de bord.', 'Erreur');
       }

@@ -100,6 +100,24 @@
   grid-area: head;
   height: 10vh;
   border-bottom: 1px solid #6b728051;
+  display: flex;
+  /* flex-direction:row; */
+  /* justify-items:space-between; */
+  background-color: #2E7D32;
+  box-shadow:3px 1px #f0f2f5;
+  /* margin:10px auto; */
+}
+
+.titreLogo h2{
+  font-size:35px;
+  margin: auto 30px;
+  color:white;
+}
+.titreLogo img{
+  width:110px;
+  height:90px;
+  margin-bottom:10px;
+  /* float:left; */
 }
 
 .sideBar .nav{

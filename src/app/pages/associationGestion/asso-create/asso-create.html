@@ -1,194 +1,231 @@
 <div class="form-container">
   <div class="back-link">
     <a routerLink="/associations" class="back-button">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
       Retour à la liste
     </a>
   </div>
+
   <form (ngSubmit)="onSubmit()" #orgForm="ngForm">
+
+    <!-- ======================== SECTION 1 ======================== -->
     <div class="form-section card-style">
       <h2 class="section-title">Informations générales</h2>
+
       <div class="row">
         <div class="col-6">
           <label for="nomAssoc">Nom de l'association </label>
-          <input type="text" id="nomAssoc" [(ngModel)]="nouvelleAssociation.name" name="nomAssoc" required>
+          <input type="text"
+                 id="nomAssoc"
+                 [(ngModel)]="nouvelleAssociation.name"
+                 name="nomAssoc"
+                 required
+                 pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ,.'\-]{2,60}$"
+                 #nomAssocRef="ngModel">
+          <div class="error" *ngIf="nomAssocRef.invalid && nomAssocRef.touched">
+            Nom invalide.
+          </div>
         </div>
+
         <div class="col-6">
           <label for="typeOrg">Type d'Association </label>
-          <select id="typeOrg" [(ngModel)]="nouvelleAssociation.categorie" name="typeOrg" required>
+          <select id="typeOrg" [(ngModel)]="nouvelleAssociation.categorie" name="typeOrg"
+                  required #typeOrgRef="ngModel">
             <option value="" disabled>Sélectionnez un type</option>
             @for (type of assoTypes; track type) {
               <option [value]="type">{{ type }}</option>
             }
           </select>
+          <div class="error" *ngIf="typeOrgRef.invalid && typeOrgRef.touched">
+            Veuillez choisir un type.
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
           <label for="description">Description / Mission </label>
-          <textarea id="description" [(ngModel)]="nouvelleAssociation.description" name="description" rows="4" placeholder="Décrivez la mission et les objectifs de votre association" required></textarea>
+          <textarea id="description" [(ngModel)]="nouvelleAssociation.description" name="description"
+                    rows="4" required #descRef="ngModel"></textarea>
+          <div class="error" *ngIf="descRef.invalid && descRef.touched">
+            Description requise.
+          </div>
         </div>
       </div>
 
-      <div  style="display: flex; flex-direction: row; padding: 10px;">
-
-        <div class="row logo-upload">
+      <!-- ----- Logo + Cover ----- -->
+      <div class="img-section">
+        <div class="img-block">
           <label>Logo</label>
-          <div class="logo-preview">
-            <div class="preview-box">
-              <span *ngIf="!nouvelleAssociation.logoFile">Aucun logo</span>
-              <img *ngIf="logoPath" [src]="logoPath" alt="Logo preview">
-            </div>
-            <div class="file-input-wrapper">
-              <input type="file" id="logo" (change)="onFileChange($event,'logo')" accept="image/png, image/jpeg, image/gif" style="display: none;">
-              <button type="button" onclick="document.getElementById('logo').click()">Choisir un fichier</button>
-              <small>PNG, JPG ou GIF. Taille maximale de 2 Mo.</small>
-            </div>
+          <div class="preview-box">
+            <span *ngIf="!logoPath">Aucun logo</span>
+            <img *ngIf="logoPath" [src]="logoPath" alt="Logo">
           </div>
+          <button type="button" (click)="triggerFile('logo')">Choisir un fichier</button>
+          <input type="file" id="logo" (change)="onFileChange($event,'logo')" accept="image/png, image/jpeg"
+                 hidden>
         </div>
 
-        <div class="row logo-upload">
+        <div class="img-block">
           <label>Couverture</label>
-          <div class="logo-preview">
-            <div class="preview-box">
-              <span *ngIf="!nouvelleAssociation.logoCouverture">Aucun cover</span>
-              <img *ngIf="coverPath" [src]="coverPath" alt="image cover">
-            </div>
-            <div class="file-input-wrapper">
-              <input type="file" id="cover" (change)="onFileChange($event,'couverture')" accept="image/png, image/jpeg, image/gif" style="display: none;">
-              <button type="button" onclick="document.getElementById('cover').click()">Choisir un fichier</button>
-              <small>PNG, JPG ou GIF. Taille maximale de 2 Mo.</small>
-            </div>
+          <div class="preview-box">
+            <span *ngIf="!coverPath">Aucun cover</span>
+            <img *ngIf="coverPath" [src]="coverPath" alt="Cover">
           </div>
+          <button type="button" (click)="triggerFile('cover')">Choisir un fichier</button>
+          <input type="file" id="cover" (change)="onFileChange($event,'couverture')"
+                 accept="image/png, image/jpeg" hidden>
         </div>
-
       </div>
-
 
     </div>
 
+    <!-- ======================== SECTION 2 ======================== -->
     <div class="form-section card-style">
       <h2 class="section-title">Coordonnées</h2>
 
       <div class="row">
         <div class="col-6">
           <label for="email">Email</label>
-          <input type="email" id="email" [(ngModel)]="nouvelleAssociation.email" name="email">
+          <input type="email" id="email" [(ngModel)]="nouvelleAssociation.email" name="email"
+                 email #emailRef="ngModel">
+          <div class="error" *ngIf="emailRef.invalid && emailRef.touched">
+            Email invalide.
+          </div>
         </div>
+
         <div class="col-6">
           <label for="tel">Téléphone</label>
-          <input type="tel" id="tel" [(ngModel)]="nouvelleAssociation.phone" name="tel" required>
+          <input type="tel"
+                 id="tel"
+                 [(ngModel)]="nouvelleAssociation.phone"
+                 name="tel"
+                 required
+                 pattern="^((\\+223)?[0-9]{8})$"
+                 #telRef="ngModel">
+          <div class="error" *ngIf="telRef.invalid && telRef.touched">
+            Numéro invalide (8 chiffres ou +223).
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
           <label for="siteWeb">Site web</label>
-          <input type="url" id="siteWeb" [(ngModel)]="nouvelleAssociation.siteWeb" name="siteWeb" placeholder="https://">
+          <input type="url" id="siteWeb" [(ngModel)]="nouvelleAssociation.siteWeb" name="siteWeb"
+                 pattern="https?://.+" #siteRef="ngModel" placeholder="https://">
+          <div class="error" *ngIf="siteRef.invalid && siteRef.touched">
+            URL invalide.
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
           <label for="adresse">Adresse </label>
-          <input type="text" id="adresse" [(ngModel)]="nouvelleAssociation.address" name="adresse" required>
+          <input type="text" id="adresse" [(ngModel)]="nouvelleAssociation.address" name="adresse" required
+                 #adresseRef="ngModel">
+          <div class="error" *ngIf="adresseRef.invalid && adresseRef.touched">
+            Adresse requise.
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-4">
-          <label for="ville">Ville </label>
-          <input type="text" id="ville" [(ngModel)]="nouvelleAssociation.ville" name="ville" required>
+          <label for="ville">Ville</label>
+          <input type="text" id="ville" [(ngModel)]="nouvelleAssociation.ville" name="ville" required
+                 #villeRef="ngModel">
+          <div class="error" *ngIf="villeRef.invalid && villeRef.touched">Ville requise.</div>
         </div>
+
         <div class="col-4">
           <label for="codePostal">Code postal</label>
-          <input type="text" id="codePostal" [(ngModel)]="nouvelleAssociation.codePostal" name="codePostal">
+          <input type="text" id="codePostal" [(ngModel)]="nouvelleAssociation.codePostal" name="codePostal"
+                 pattern="^[0-9]{3,10}$" #cpRef="ngModel">
+          <div class="error" *ngIf="cpRef.invalid && cpRef.touched">
+            Code postal invalide (3 à 10 chiffres).
+          </div>
         </div>
+
         <div class="col-4">
-          <label for="pays">Pays </label>
-          <input type="text" id="pays" [(ngModel)]="nouvelleAssociation.pays" name="pays" required value="Mali">
+          <label for="pays">Pays</label>
+          <input type="text" id="pays" [(ngModel)]="nouvelleAssociation.pays" name="pays" required
+                 #paysRef="ngModel">
+          <div class="error" *ngIf="paysRef.invalid && paysRef.touched">Pays requis.</div>
         </div>
       </div>
+
     </div>
 
+    <!-- ======================== SECTION 3 ======================== -->
     <div class="form-section card-style">
       <h2 class="section-title">Représentant légal</h2>
 
       <div class="row">
         <div class="col-6">
-          <label for="nomRep">Nom complet </label>
-          <input type="text" id="nomRep" [(ngModel)]="nouvelleAssociation.nomComplet" name="nomRep" required>
+          <label for="nomRep">Nom complet</label>
+          <input type="text" id="nomRep" [(ngModel)]="nouvelleAssociation.nomComplet"
+                 name="nomRep" required #nomRepRef="ngModel">
+          <div class="error" *ngIf="nomRepRef.invalid && nomRepRef.touched">Nom requis.</div>
         </div>
+
         <div class="col-6">
-          <label for="fonctionRep">Fonction </label>
-          <input type="text" id="fonctionRep" [(ngModel)]="nouvelleAssociation.fonction" name="fonctionRep" placeholder="Président, Secrétaire, etc." required>
+          <label for="fonctionRep">Fonction</label>
+          <input type="text" id="fonctionRep" [(ngModel)]="nouvelleAssociation.fonction"
+                 name="fonctionRep" required #foncRef="ngModel">
+          <div class="error" *ngIf="foncRef.invalid && foncRef.touched">Fonction requise.</div>
         </div>
       </div>
 
-      <!-- <div class="row">
-        <div class="col-6">
-          <label for="emailRep">Email</label>
-          <input type="email" id="emailRep" [(ngModel)]="nouvelleAssociation.email" name="emailRep" >
-        </div>
-        <div class="col-6">
-          <label for="telRep">Téléphone </label>
-          <input type="tel" id="telRep" [(ngModel)]="nouvelleAssociation.telephoneR" name="telRep" required>
-        </div>
-      </div> -->
     </div>
 
+    <!-- ======================== SECTION 4 ======================== -->
     <div class="form-section card-style">
       <h2 class="section-title">Informations administratives</h2>
 
       <div class="row">
         <div class="col-6">
-          <label for="numEnreg">Numéro d'enregistrement </label>
-          <input type="text" id="numEnreg" [(ngModel)]="nouvelleAssociation.numeroEnregistrement" name="numEnreg" required>
-        </div>
-        <div class="col-6 date-field">
-          <label for="dateCreation">Date de création </label>
-          <div class="input-with-icon">
-            <input type="text" id="dateCreation" [(ngModel)]="nouvelleAssociation.dateCreation" name="dateCreation" placeholder="mm/dd/yyyy"  disabled="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <label for="numEnreg">Numéro d'enregistrement</label>
+          <input type="text" id="numEnreg" [(ngModel)]="nouvelleAssociation.numeroEnregistrement"
+                 name="numEnreg" required pattern="^[A-Za-z0-9\-\/]{3,50}$"
+                 #numEnregRef="ngModel">
+          <div class="error" *ngIf="numEnregRef.invalid && numEnregRef.touched">
+            Format invalide.
           </div>
         </div>
-      </div>
 
-      <!-- <div class="row">
-        <div class="col-6">
-          <label for="statut">Statut</label>
-          <select id="statut" [(ngModel)]="nouvelleAssociation.statut" name="statut">
-            <option value="En attente">En attente</option>
-            <option value="Approuvé">Approuvé</option>
-            <option value="Rejeté">Rejeté</option>
-          </select>
+        <div class="col-6 date-field">
+          <label>Date de création</label>
+          <input type="text" [(ngModel)]="nouvelleAssociation.dateCreation"
+                 disabled="true">
         </div>
-      </div> -->
+      </div>
 
       <div class="row checkbox-row">
-        <input
-          type="checkbox"
-          id="confirmation"
-          [(ngModel)]="nouvelleAssociation.confirmationOfficielle"
-          name="confirmation"
-          required
-          class="custom-checkbox"
-        >
-        <label for="confirmation">Je confirme que toutes les informations fournies sont exactes et conformes aux documents officiels.</label>
+        <input type="checkbox" id="confirmation"
+               [(ngModel)]="nouvelleAssociation.confirmationOfficielle"
+               name="confirmation" required #confirmRef="ngModel">
+        <label for="confirmation">Je confirme que toutes les informations fournies sont exactes.</label>
+      </div>
+      <div class="error" *ngIf="confirmRef.invalid && confirmRef.touched">
+        Vous devez confirmer.
       </div>
 
     </div>
 
+    <!-- ======================== FOOTER ======================== -->
     <div class="form-footer">
       <button type="submit" class="btn-primary" [disabled]="orgForm.invalid">
-        @if(isEditMode){
-        Enregistrer les modifications
-        } @else {
-        Enregistrer
-        }
+        @if(isEditMode){ Enregistrer les modifications } @else { Enregistrer }
       </button>
+
       <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
     </div>
+
   </form>
 </div>
